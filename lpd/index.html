@@ -1,0 +1,189 @@
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+    integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
+  <script>
+    var champions = [
+      { "name": "Keera", "type": "slayer" },
+      { "name": "Lorsann", "type": "slayer" },
+      { "name": "Maxen", "type": "slayer" },
+      { "name": "Morrigan", "type": "slayer" },
+      { "name": "Rangosh", "type": "slayer" },
+      { "name": "Skullbreaker", "type": "slayer" },
+      { "name": "Sneaky Peet", "type": "slayer" },
+
+      { "name": "Blackjaw", "type": "maelstrom" },
+      { "name": "Fenra", "type": "maelstrom" },
+      { "name": "Grimgut", "type": "maelstrom" },
+      { "name": "Jeen", "type": "maelstrom" },
+      { "name": "Kailinn", "type": "maelstrom" },
+      { "name": "Luella", "type": "maelstrom" },
+      { "name": "Titus", "type": "maelstrom" },
+
+      { "name": "Lily", "type": "shaper" },
+      { "name": "Nia", "type": "shaper" },
+      { "name": "Raith'Marid", "type": "shaper" },
+      { "name": "Rattlebone", "type": "shaper" },
+      { "name": "Shayle", "type": "shaper" },
+      { "name": "Styx", "type": "shaper" },
+
+      { "name": "Finvarr", "type": "guardian" },
+      { "name": "Halftusk", "type": "guardian" },
+      { "name": "Helena", "type": "guardian" },
+      { "name": "Jaak", "type": "guardian" },
+      { "name": "Mournblade", "type": "guardian" },
+      { "name": "Rhodri", "type": "guardian" },
+    ]
+
+    function championElement(champion) {
+      var key = champion['name'].toLowerCase().replace(/[^a-z]/, '');
+      var imageUrl = "https://godtear.longshanks.org/systems/godtear/factions/"
+        + champion['type'] + '-' + key + '.png';
+      var image = $("<img>")
+        .attr("src", imageUrl)
+        .css("height", "2em")
+        .css("width", "2em");
+      return $("<div/>")
+        .attr("class", "box")
+        .append(image)
+        .append($("<span/>").text(champion['name']));
+    }
+
+    function init() {
+      $.each(champions, function (index, champion) {
+        $("#available-" + champion['type']).append(championElement(champion));
+      });
+      generate();
+    }
+
+    function generate() {
+      $("#pool").hide();
+      $("#pool-discord").empty();
+      $("#pool-text").empty();
+      $("#pool-graphical-0").empty();
+      $("#pool-graphical-1").empty();
+      $("#pool-graphical-2").empty();
+      _.each(['slayer', 'maelstrom', 'shaper', 'guardian'], function (type) {
+        var subset = selectSubset(3, type);
+        _.each(subset, function (champion, index) {
+          $("#pool-graphical-" + index).append(championElement(champion));
+        });
+        $("#pool-text").append(
+          _.map(subset, function (champion) {
+            return champion['name'];
+          }).join(", ")
+        ).append("\n");
+        $("#pool-discord").append(
+          _.map(subset, function (champion) {
+            var key = champion['name'].toLowerCase().replace(/[^a-z]/, '');
+            return ":" + key + ":";
+          }).join(" ")
+        ).append("\n");
+      })
+      $("#pool").show();
+    }
+
+    function copyNames() {
+      copyToClipboard("#pool-text");
+    }
+    function copyIcons() {
+      copyToClipboard("#pool-discord");
+    }
+
+    function copyToClipboard(element) {
+      var $temp = $("<textarea>");
+      $("body").append($temp);
+      $temp.val($(element).text()).select();
+      document.execCommand("copy");
+      $temp.remove();
+    }
+
+    function selectSubset(number, type) {
+      return _.sortBy(
+        _.sample(
+          _.filter(champions, function (champion) {
+            return champion['type'] == type;
+          }),
+          number
+        ),
+        function (champion) {
+          return champion['name'];
+        }
+      );
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 1em;
+    }
+
+    thead {
+      font-weight: bold;
+    }
+
+    .box {
+      display: flex;
+      align-items: center;
+    }
+
+    .pre {
+      font-family: fixed-width;
+      white-space: pre;
+      display: none;
+    }
+
+    table td {
+      vertical-align: top;
+    }
+
+    #actions {
+      margin: 1em 0 1em 0;
+    }
+  </style>
+</head>
+
+<body onload="init()">
+  <h1>Limited Pool Draft Generator (aka Crowe Draft)</h1>
+  <div id="champions">
+    <table>
+      <thead>
+        <tr>
+          <td>Slayers</td>
+          <td>Maelstroms</td>
+          <td>Shapers</td>
+          <td>Guardians</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="available-slayer"></td>
+          <td id="available-maelstrom"></td>
+          <td id="available-shaper"></td>
+          <td id="available-guardian"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="actions">
+    <button onclick="generate()">Regenerate Pool</button>
+  </div>
+  <div id="pool" style="display:none;margin-top:1em;">
+    <table>
+      <tr>
+        <td id="pool-graphical-0"></td>
+        <td id="pool-graphical-1"></td>
+        <td id="pool-graphical-2"></td>
+      </tr>
+    </table>
+    <div id="pool-text" class="pre"></div>
+    <div id="pool-discord" class="pre"></div>
+    <a href="javascript:copyNames()" id="clipboard">Copy Names</a>
+    -
+    <a href="javascript:copyIcons()" id="clipboard">Copy Discord Icons</a>
+  </div>
+</body>
+
+</html>
