@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Browser</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    h5 {
+      margin-bottom: 0;
+    }
+
+    #champion-list-headers .small {
+      text-size-adjust: 70%;
+    }
+
+    .fullscreen-container {
+      height: calc(100vh - 180px);
+      /* Adjust based on actual header height */
+      width: calc(100vw - 30px);
+      display: flex;
+      justify-content: center;
+      align-items: start;
+
+    }
+
+    .fullscreen-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    .list-item {
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="d-none">
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs sticky-top" style="top: 0; z-index: 1020; background: white;">
+    <li class="nav-item">
+      <a class="nav-link active" href="#champion-tab-content" data-bs-toggle="tab"
+        data-fragment="champions">Champions</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#scenario-tab-content" data-bs-toggle="tab" data-fragment="scenarios">Scenarios</a>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+
+    <!-- Champion Tab Content -->
+    <div id="champion-tab-content" class="show active fade tab-pane">
+      <!-- Champion List View -->
+      <div id="champion-list-view" class="list-view">
+        <!-- Column List Header -->
+        <div id="champion-list-headers" class="sticky-top px-3 py-2 bg-light border-bottom"
+          style="top: 42px; z-index: 1010;">
+          <div class="row fw-bold text-muted align-items-center" style="max-width: 450px">
+            <div class="col-4 small">Champion</div>
+            <div class="col-2 text-center small">Dodge</div>
+            <div class="col-2 text-center small">Protection</div>
+            <div class="col-2 text-center small">Health</div>
+            <div class="col-2 text-center small">Move</div>
+          </div>
+        </div>
+        <!-- Champions List Items -->
+        <div id="champion-list-items" class="p-3">
+          <template id="champion-list-header-template">
+            <h5>My Champion Group</h5>
+          </template>
+          <template id="champion-list-item-template">
+            <div class="row list-item" data-champion="my-champion" style="max-width: 450px">
+              <div class="col-4 list-item-label d-flex align-items-center">
+                <img class="list-item-icon" loading="lazy" src="https://godtear.longshanks.org/systems/godtear/factions/type-champion.png" style="height: 1.5em; width: 1.5em;"/>
+                <div class="list-item-name d-inline">My Champion</div>
+              </div>
+              <div class="col-2 list-item-dodge text-center">?</div>
+              <div class="col-2 list-item-protection text-center">?</div>
+              <div class="col-2 list-item-health text-center">?</div>
+              <div class="col-2 list-item-movement text-center">?/?</div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <!-- Champion Show View -->
+      <div id="champion-show-view" class="border-top show-view d-none">
+        <!-- Champion Show Navigation -->
+        <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2">
+          <div>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-up"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-down"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-left"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-right"></button>
+          </div>
+        </div>
+        <!-- Champion Show Items -->
+        <div id="champion-show-items" class="p-3">
+          <template id="champion-card-template">
+            <div class="champion-card-container d-none fullscreen-container" data-champion="my-champion"
+              data-fragment="champion=my-champion&card=1">
+              <img class="fullscreen-image d-none champion-trait" data-fragment="champion=my-champion&card=1"
+                loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Trait" />
+              <img class="fullscreen-image d-none champion-plot" data-fragment="champion=my-champion&card=2"
+                loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Plot" />
+              <img class="fullscreen-image d-none champion-clash" data-fragment="champion=my-champion&card=3"
+                loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Clash" />
+              <img class="fullscreen-image d-none follower-plot" data-fragment="champion=my-champion&card=4"
+                loading="lazy" src="https://placehold.co/1500x2100?text=Follower+Plot" />
+              <img class="fullscreen-image d-none follower-clash" data-fragment="champion=my-champion&card=5"
+                loading="lazy" src="https://placehold.co/1500x2100?text=Follower+Clash" />
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario Tab Content -->
+    <div id="scenario-tab-content" class="tab-pane fade">
+      <!-- Senario List View -->
+      <div id="scenario-list-view" class="p-3 list-view">
+        <!-- Scenario List Items -->
+        <div id="scenario-list-items">
+          <template id="scenario-list-header-template">
+            <h5>My Scenario Group</h5>
+          </template>
+          <template id="scenario-list-item-template">
+            <div class="row list-item" data-scenario="my-scenario">
+              <div class="col list-item-name">My Scenario</div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <!-- Scenario Show View -->
+      <div id="scenario-show-view" class="border-top show-view d-none">
+        <!-- Scenario Show Navigation -->
+        <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2">
+          <div>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-up"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-down"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-left disabled"></button>
+            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-right disabled"></button>
+          </div>
+        </div>
+        <!-- Scenario Show Items -->
+        <div id="scenario-show-items" class="p-3">
+          <template id="scenario-card-template">
+            <div class="scenario-card-container d-none fullscreen-container" data-scenario="my-scenario"
+              data-fragment="scenario=my-scenario">
+              <img class="fullscreen-image" loading="lazy" src="https://placehold.co/1500x2100?text=My+Scenario" />
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+  <script>
+    /*---------------------------------------------------------------------------------------------
+     * DATA
+     *-------------------------------------------------------------------------------------------*/
+
+    // Define the champions
+    const championData = {
+      'Slayers': [
+        { name: "Keera", type: "slayer" },
+        { name: "Lorsann", type: "slayer" },
+        { name: "Maxen", type: "slayer" },
+        { name: "Morrigan", type: "slayer" },
+        { name: "Rangosh", type: "slayer" },
+        { name: "Skullbreaker", type: "slayer" },
+        { name: "Sneaky Peet", type: "slayer" }
+      ],
+      'Maelstroms': [
+        { name: "Blackjaw", type: "maelstrom" },
+        { name: "Fenra", type: "maelstrom" },
+        { name: "Grimgut", type: "maelstrom" },
+        { name: "Jeen", type: "maelstrom" },
+        { name: "Kailinn", type: "maelstrom" },
+        { name: "Luella", type: "maelstrom" },
+        { name: "Titus", type: "maelstrom" }
+      ],
+      'Shapers': [
+        { name: "Lily", type: "shaper" },
+        { name: "Nia", type: "shaper" },
+        { name: "Raith'Marid", type: "shaper" },
+        { name: "Rattlebone", type: "shaper" },
+        { name: "Shayle", type: "shaper" },
+        { name: "Styx", type: "shaper" }
+      ],
+      'Guardians': [
+        { name: "Durthax", type: "guardian" },
+        { name: "Finvarr", type: "guardian" },
+        { name: "Halftusk", type: "guardian" },
+        { name: "Helena", type: "guardian" },
+        { name: "Jaak", type: "guardian" },
+        { name: "Mournblade", type: "guardian" },
+        { name: "Rhodri", type: "guardian" }
+      ]
+    }
+
+    // Define the scenarios
+    const scenarioData = {
+      "Competitive": {
+        "Change": "https://placehold.co/1500x2100?text=Change",
+        "Chaos": "https://placehold.co/1500x2100?text=Chaos",
+        "Construction": "https://placehold.co/1500x2100?text=Construction",
+        "Death": "https://placehold.co/1500x2100?text=Death",
+        "Knowledge": "https://placehold.co/1500x2100?text=Knowledge",
+        "Life": "https://placehold.co/1500x2100?text=Life"
+      },
+      "Retired": {
+        "Quest": "https://placehold.co/1500x2100?text=Quest"
+      },
+      "Community": {
+        "2v2 Change": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Change.jpg",
+        "2v2 Chaos": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Chaos.jpg",
+        "2v2 Construction": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Construction.jpg",
+        "2v2 Death": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Death.jpg",
+        "2v2 Knowledge": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Knowledge.jpg",
+        "Plenty": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/Plenty.jpg",
+        "Trade": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/Trade.jpg"
+      }
+    };
+
+    /*---------------------------------------------------------------------------------------------
+     * HELPER FUNCTIONS
+     *-------------------------------------------------------------------------------------------*/
+
+    function apply(element, elementHandler) {
+      elementHandler(element);
+    }
+
+    function createElementFromTemplate(template, elementHandler) {
+      const element = template.content.cloneNode(true);
+      elementHandler(element);
+      return element;
+    }
+
+    function getElementOrThrow(selector, scope = document) {
+      const el = scope.querySelector(selector);
+      if (!el) {
+        throw new Error(`Element '${selector}' not found.`);
+      }
+      return el;
+    }
+
+    function mod(value, modulus) {
+      return ((value % modulus) + modulus) % modulus;
+    }
+
+    function slugify(text) {
+      return text
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z]/, '');
+        // .replace(/[\s\W-]+/g, '-')   // Replace spaces and non-word chars with hyphen
+        //.replace(/^-+|-+$/g, '');    // Trim leading/trailing hyphens
+    }
+
+    /*---------------------------------------------------------------------------------------------
+     * NAVIGATION FUNCTIONS - CHAMPION
+     *-------------------------------------------------------------------------------------------*/
+
+    function cycleChampion(adjustment) {
+      // Find the list of champions
+      const championContainerArray = Array.from(document.querySelectorAll('.champion-card-container'));
+      // Find the active champion
+      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
+      // Find the active champion container index
+      const activeChampionContainerIndex = championContainerArray.indexOf(activeChampionContainer);
+      if (activeChampionContainerIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the next champion container index (handling positive and negative wrapping)
+      const nextChampionContainerIndex = mod(activeChampionContainerIndex + adjustment, championContainerArray.length);
+      const nextChampionContainer = championContainerArray[nextChampionContainerIndex];
+      const nextChampionKey = nextChampionContainer.dataset.champion;
+      // Show the champion
+      showChampion(nextChampionKey);
+    }
+
+    function showChampion(championKey) {
+      // Hide list view
+      document.querySelectorAll('.list-view').forEach(item => {
+        item.classList.add('d-none');
+      });
+      // Show card view
+      document.querySelectorAll('.show-view').forEach(item => {
+        item.classList.remove('d-none');
+      });
+
+      // Hide all champions
+      document.querySelectorAll('.champion-card-container').forEach(element => {
+        element.classList.add('d-none');
+        element.classList.remove('active');
+      });
+
+      // Prepare the next container
+      const championContainer = getElementOrThrow(`.champion-card-container[data-champion="${championKey}"]`);
+      championContainer.querySelectorAll('img').forEach(element => {
+        element.classList.add('d-none');
+        element.classList.remove('fade-in');
+        element.classList.remove('active');
+      });
+      apply(championContainer.querySelector('img.champion-trait'), element => {
+        element.classList.remove('d-none');
+        element.classList.add('fade-in');
+        element.classList.add('active');
+      });
+      // Display the next container
+      apply(championContainer, element => {
+        element.classList.remove('d-none');
+        element.classList.add('active');
+      });
+      // Update URL content
+      history.replaceState(null, null, `#champion=${championKey}&card=1`); // Update URL without reloading
+    }
+
+    /*---------------------------------------------------------------------------------------------
+     * NAVIGATION FUNCTIONS - CHAMPION CARD
+     *-------------------------------------------------------------------------------------------*/
+
+    function cycleChampionCard(adjustment) {
+      // Find the active champion
+      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
+      // Find the list of champion cards
+      const championCardArray = Array.from(activeChampionContainer.querySelectorAll('img'));
+      // Find the active champion card
+      const activeChampionCard = getElementOrThrow('.champion-card-container.active > img.active')
+      // Find the active champion card index
+      const activeChampionCardIndex = championCardArray.indexOf(activeChampionCard);
+      if (activeChampionCardIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the next champion card index (handling positive and negative wrapping)
+      const nextChampionCardIndex = mod(activeChampionCardIndex + adjustment, championCardArray.length);
+      const nextChampionCard = championCardArray[nextChampionCardIndex];
+      const nextChampionKey = activeChampionContainer.dataset.champion;
+      const nextChampionCardFragment = nextChampionCard.dataset.fragment;
+      // Show the champion
+      showChampionCard(nextChampionKey, nextChampionCardFragment);
+    }
+
+    function showChampionCard(championKey, fragment) {
+      // Ensure the champion is being shown
+      showChampion(championKey);
+      // Find the active champion
+      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
+      // Hide all images
+      activeChampionContainer.querySelectorAll('img').forEach(element => {
+        element.classList.add('d-none');
+        element.classList.remove('fade-in');
+        element.classList.remove('active');
+      });
+      // Display the selected image
+      apply(getElementOrThrow(`[data-fragment="${fragment}"]`, activeChampionContainer), element => {
+        element.classList.remove('d-none');
+        element.classList.add('fade-in');
+        element.classList.add('active');
+      });
+      // Update URL content
+      history.replaceState(null, null, `#${fragment}`); // Update URL without reloading
+    }
+
+    /*---------------------------------------------------------------------------------------------
+     * NAVIGATION FUNCTIONS - SCENARIO
+     *-------------------------------------------------------------------------------------------*/
+
+    function cycleScenario(adjustment) {
+      // Find the list of scenarios
+      const scenarioContainerArray = Array.from(document.querySelectorAll('.scenario-card-container'));
+      // Find the active scenario
+      const activeScenarioContainer = getElementOrThrow('.scenario-card-container.active');
+      // Find the active scenario container index
+      const activeScenarioContainerIndex = scenarioContainerArray.indexOf(activeScenarioContainer);
+      if (activeScenarioContainerIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the next scenario container index (handling positive and negative wrapping)
+      const nextScenarioContainerIndex = mod(activeScenarioContainerIndex + adjustment, scenarioContainerArray.length);
+      const nextScenarioContainer = scenarioContainerArray[nextScenarioContainerIndex];
+      const nextScenarioKey = nextScenarioContainer.dataset.scenario;
+      // Show the scenario
+      showScenario(nextScenarioKey);
+    }
+
+    function showScenario(scenarioKey) {
+      // Hide list view
+      document.querySelectorAll('.list-view').forEach(item => {
+        item.classList.add('d-none');
+      });
+      // Show card view
+      document.querySelectorAll('.show-view').forEach(item => {
+        item.classList.remove('d-none');
+      });
+
+      // Hide all scenarios
+      document.querySelectorAll('.scenario-card-container').forEach(element => {
+        element.classList.add('d-none');
+        element.classList.remove('active');
+      });
+
+      // Display the next container
+      const scenarioContainer = getElementOrThrow(`.scenario-card-container[data-scenario="${scenarioKey}"]`);
+      apply(scenarioContainer, element => {
+        element.classList.remove('d-none');
+        element.classList.add('active');
+      });
+      // Update URL content
+      history.replaceState(null, null, `#scenario=${scenarioKey}`); // Update URL without reloading
+    }
+
+    /*---------------------------------------------------------------------------------------------
+     * CHAMPIONS
+     *-------------------------------------------------------------------------------------------*/
+
+    // Obtain reference to champion elements
+    const champion = {
+      list: {
+        container: getElementOrThrow("#champion-list-items"),
+        templates: {
+          header: getElementOrThrow("#champion-list-header-template"),
+          item: getElementOrThrow("#champion-list-item-template")
+        }
+      },
+      show: {
+        container: getElementOrThrow("#champion-show-items"),
+        templates: {
+          card: getElementOrThrow("#champion-card-template")
+        }
+      }
+    };
+    // Dynamically add champion elements from data
+    Object.entries(championData).forEach(([group, champions], index) => {
+      // Add #champion-list-items <hr> divider (if this is not the first element)
+      if (index > 0) {
+        champion.list.container.appendChild(document.createElement('hr'));
+      }
+      // Add #champion-list-items <h5> title
+      champion.list.container.appendChild(createElementFromTemplate(champion.list.templates.header, element => {
+        element.querySelector('h5').textContent = group;
+      }));
+
+      // For each of the champions
+      Object.entries(champions).forEach(([index, championDefinition]) => {
+        const championKey = slugify(championDefinition['name']);
+        const championName = championDefinition['name'];
+        const championType = championDefinition['type'];
+        // Add #champion-list-items <div class="list-item ...">
+        champion.list.container.appendChild(createElementFromTemplate(champion.list.templates.item, element => {
+          apply(element.querySelector('.list-item'), element => {
+            element.dataset.champion = championKey;
+          });
+          apply(element.querySelector('.list-item-icon'), element => {
+            element.src = `https://godtear.longshanks.org/systems/godtear/factions/${championType}-${championKey}.png`;
+          });
+          apply(element.querySelector('.list-item-name'), element => {
+            element.textContent = championName;
+          });
+        }));
+        // Add #champion-show-items <div class="champion-card ...">
+        champion.show.container.appendChild(createElementFromTemplate(champion.show.templates.card, element => {
+          apply(element.querySelector(".champion-card-container"), element => {
+            element.dataset.champion = championKey;
+            element.dataset.fragment = `champion=${championKey}&card=1`;
+          });
+          apply(element.querySelector(".champion-card-container > .champion-trait"), element => {
+            element.alt = `${championName} Trait`;
+            element.src = `https://placehold.co/1500x2100?text=${championName}+Trait`;
+            element.dataset.fragment = `champion=${championKey}&card=1`;
+          });
+          apply(element.querySelector(".champion-card-container > .champion-plot"), element => {
+            element.alt = `${championName} Plot`;
+            element.src = `https://placehold.co/1500x2100?text=${championName}+Plot`;
+            element.dataset.fragment = `champion=${championKey}&card=2`;
+          });
+          apply(element.querySelector(".champion-card-container > .champion-clash"), element => {
+            element.alt = `${championName} Clash`;
+            element.src = `https://placehold.co/1500x2100?text=${championName}+Clash`;
+            element.dataset.fragment = `champion=${championKey}&card=3`;
+          });
+          apply(element.querySelector(".champion-card-container > .follower-plot"), element => {
+            element.alt = `${championName} Follower Plot`;
+            element.src = `https://placehold.co/1500x2100?text=${championName}+Follower+Plot`;
+            element.dataset.fragment = `champion=${championKey}&card=4`;
+          });
+          apply(element.querySelector(".champion-card-container > .follower-clash"), element => {
+            element.alt = `${championName} Follower Clash`;
+            element.src = `https://placehold.co/1500x2100?text=${championName}+Follower+Clash`;
+            element.dataset.fragment = `champion=${championKey}&card=5`;
+          });
+        }));
+      });
+    });
+    // Champion list click
+    champion.list.container.querySelectorAll(".list-item").forEach(item => {
+      item.addEventListener("click", () => { showChampion(item.dataset.champion); });
+    });
+
+    /*---------------------------------------------------------------------------------------------
+     * SCENARIOS
+     *-------------------------------------------------------------------------------------------*/
+
+    // Obtain reference to scenario elements
+    const scenario = {
+      list: {
+        container: getElementOrThrow("#scenario-list-items"),
+        templates: {
+          header: getElementOrThrow("#scenario-list-header-template"),
+          item: getElementOrThrow("#scenario-list-item-template")
+        }
+      },
+      show: {
+        container: getElementOrThrow("#scenario-show-items"),
+        templates: {
+          card: getElementOrThrow("#scenario-card-template")
+        }
+      }
+    };
+    // Dynamically add scenario elements from data
+    Object.entries(scenarioData).forEach(([group, scenarios], index) => {
+      // Add #scenario-list-items <hr> divider (if this is not the first element)
+      if (index > 0) {
+        scenario.list.container.appendChild(document.createElement('hr'));
+      }
+      // Add #scenario-list-items <h5> title
+      scenario.list.container.appendChild(createElementFromTemplate(scenario.list.templates.header, element => {
+        element.querySelector('h5').textContent = group;
+      }));
+
+      // For each of the scenarios
+      Object.entries(scenarios).forEach(([name, url]) => {
+        // Add #scenario-list-items <div class="list-item ...">
+        scenario.list.container.appendChild(createElementFromTemplate(scenario.list.templates.item, element => {
+          apply(element.querySelector('.list-item'), element => {
+            element.dataset.scenario = slugify(name);
+          });
+          apply(element.querySelector('.list-item-name'), element => {
+            element.textContent = name;
+          });
+        }));
+        // Add #scenario-show-items <div class="scenario-card-container ...">
+        scenario.show.container.appendChild(createElementFromTemplate(scenario.show.templates.card, element => {
+          apply(element.querySelector("div"), element => {
+            element.dataset.scenario = slugify(name);
+            element.dataset.fragment = `scenario=${slugify(name)}`;
+          });
+          apply(element.querySelector("img"), element => {
+            element.alt = name;
+            element.src = url;
+          });
+        }));
+      });
+    });
+    // Scenario list click
+    scenario.list.container.querySelectorAll(".list-item").forEach(item => {
+      item.addEventListener("click", () => { showScenario(item.dataset.scenario); });
+    });
+
+    // Champion navigation
+    const championHammer = new Hammer(getElementOrThrow('#champion-show-items'));
+    championHammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    championHammer.on('swipeup', () => cycleChampion(+1));
+    championHammer.on('swipedown', () => cycleChampion(-1));
+    championHammer.on('swipeleft', () => cycleChampionCard(+1));
+    championHammer.on('swiperight', () => cycleChampionCard(-1));
+    getElementOrThrow('#champion-show-view .bi-arrow-up').addEventListener('click', () => { cycleChampion(-1); });
+    getElementOrThrow('#champion-show-view .bi-arrow-down').addEventListener('click', () => { cycleChampion(1); });
+    getElementOrThrow('#champion-show-view .bi-arrow-left').addEventListener('click', () => { cycleChampionCard(-1) });
+    getElementOrThrow('#champion-show-view .bi-arrow-right').addEventListener('click', () => { cycleChampionCard(+1) });
+
+    // Scenario navigation
+    const scenarioHammer = new Hammer(getElementOrThrow('#scenario-show-items'));
+    scenarioHammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    scenarioHammer.on('swipeup', () => cycleScenario(+1));
+    scenarioHammer.on('swipedown', () => cycleScenario(-1));
+    getElementOrThrow('#scenario-show-view .bi-arrow-up').addEventListener('click', () => { cycleScenario(-1) });
+    getElementOrThrow('#scenario-show-view .bi-arrow-down').addEventListener('click', () => { cycleScenario(+1) });
+
+    /*---------------------------------------------------------------------------------------------
+     * TAB CONFIGURATION
+     *-------------------------------------------------------------------------------------------*/
+
+    // Tab configuration
+    document.querySelectorAll(".nav-link").forEach(tab => {
+      // Add a click handler
+      tab.addEventListener("click", (e) => {
+        // Set the fragment
+        const fragment = e.target.dataset.fragment;
+        history.replaceState(null, null, "#" + fragment); // Update URL without reloading
+        // Hide all show views
+        document.querySelectorAll('.show-view').forEach(item => {
+          item.classList.add('d-none');
+        });
+        // Show all list views
+        document.querySelectorAll('.list-view').forEach(item => {
+          item.classList.remove('d-none');
+        });
+      });
+    });
+
+    /*---------------------------------------------------------------------------------------------
+     * PAGE LOAD
+     *-------------------------------------------------------------------------------------------*/
+
+    function onMatch(str, pattern, handler) {
+      const match = str.match(pattern);
+      if (match) {
+        handler(match);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      const fragment = location.hash.slice(1);
+      var matched = false;
+      
+      onMatch(fragment, /champions/, match => {
+        matched = true;
+      });
+      onMatch(fragment, /champion=(.+)&card=(.+)/, match => {
+        showChampionCard(match[1], fragment);
+        matched = true;
+      });
+      onMatch(fragment, /scenarios/, match => {
+        new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
+        matched = true;
+      });
+      onMatch(fragment, /scenario=(.+)/, match => {
+        new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
+        showScenario(match[1]);
+        matched = true;
+      });
+
+      if (!matched) {
+        history.replaceState(null, null, `#champions`);
+      }
+
+      getElementOrThrow('body').classList.remove('d-none');
+    });
+
+  </script>
+</body>
+</html>
