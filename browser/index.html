@@ -289,7 +289,7 @@
         .toString()
         .trim()
         .toLowerCase()
-        .replace(/[^a-z]/, '');
+        .replace(/[^a-z0-9]/g, '');
       // .replace(/[\s\W-]+/g, '-')   // Replace spaces and non-word chars with hyphen
       //.replace(/^-+|-+$/g, '');    // Trim leading/trailing hyphens
     }
@@ -317,6 +317,8 @@
     }
 
     function showChampion(championKey) {
+      // Reset window position
+      window.scrollTo(0, 0);
       // Hide list view
       document.querySelectorAll('.list-view').forEach(item => {
         item.classList.add('d-none');
@@ -422,6 +424,8 @@
     }
 
     function showScenario(scenarioKey) {
+      // Reset window position
+      window.scrollTo(0, 0);
       // Hide list view
       document.querySelectorAll('.list-view').forEach(item => {
         item.classList.add('d-none');
@@ -683,6 +687,7 @@
 
       if (!matched) {
         history.replaceState(null, null, `#champions`);
+        new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="champions"]')).show();
       }
 
       getElementOrThrow('body').classList.remove('d-none');
