@@ -506,7 +506,7 @@
             element.dataset.champion = championKey;
           });
           apply(element.querySelector('.list-item-icon'), element => {
-            element.src = `https://godtear.longshanks.org/systems/godtear/factions/${championType}-${championKey}.png`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-icons/${championType}-${championKey}.png`;
           });
           apply(element.querySelector('.list-item-name'), element => {
             element.textContent = championName;
@@ -520,27 +520,27 @@
           });
           apply(element.querySelector(".champion-card-container > .champion-trait"), element => {
             element.alt = `${championName} Trait`;
-            element.src = `https://placehold.co/1500x2100?text=${championName}+Trait`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-trait.webp`
             element.dataset.fragment = `champion=${championKey}&card=1`;
           });
           apply(element.querySelector(".champion-card-container > .champion-plot"), element => {
             element.alt = `${championName} Plot`;
-            element.src = `https://placehold.co/1500x2100?text=${championName}+Plot`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-plot.webp`
             element.dataset.fragment = `champion=${championKey}&card=2`;
           });
           apply(element.querySelector(".champion-card-container > .champion-clash"), element => {
             element.alt = `${championName} Clash`;
-            element.src = `https://placehold.co/1500x2100?text=${championName}+Clash`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-clash.webp`
             element.dataset.fragment = `champion=${championKey}&card=3`;
           });
           apply(element.querySelector(".champion-card-container > .follower-plot"), element => {
             element.alt = `${championName} Follower Plot`;
-            element.src = `https://placehold.co/1500x2100?text=${championName}+Follower+Plot`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`
             element.dataset.fragment = `champion=${championKey}&card=4`;
           });
           apply(element.querySelector(".champion-card-container > .follower-clash"), element => {
             element.alt = `${championName} Follower Clash`;
-            element.src = `https://placehold.co/1500x2100?text=${championName}+Follower+Clash`;
+            element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`
             element.dataset.fragment = `champion=${championKey}&card=5`;
           });
         }));
