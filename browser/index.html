@@ -171,8 +171,6 @@
           <div>
             <button class="btn btn-sm btn-outline-secondary bi bi-arrow-up"></button>
             <button class="btn btn-sm btn-outline-secondary bi bi-arrow-down"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-left disabled"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-right disabled"></button>
           </div>
         </div>
         <!-- Scenario Show Items -->
@@ -198,54 +196,54 @@
     // Define the champions
     const championData = {
       'Slayers': [
-        { name: "Keera", type: "slayer" },
-        { name: "Lorsann", type: "slayer" },
-        { name: "Maxen", type: "slayer" },
-        { name: "Morrigan", type: "slayer" },
-        { name: "Rangosh", type: "slayer" },
-        { name: "Skullbreaker", type: "slayer" },
-        { name: "Sneaky Peet", type: "slayer" }
+        { "name": "Keera", "type": "slayer", "dodge": 3, "protection": 2, "health": 6, "movement": "2/2" },
+        { "name": "Lorsann", "type": "slayer", "dodge": 4, "protection": 1, "health": 6, "movement": "2/3" },
+        { "name": "Maxen", "type": "slayer", "dodge": 3, "protection": 3, "health": 6, "movement": "1/2" },
+        { "name": "Morrigan", "type": "slayer", "dodge": 2, "protection": 3, "health": 6, "movement": "2/2" },
+        { "name": "Rangosh", "type": "slayer", "dodge": 4, "protection": 2, "health": 7, "movement": "3/2" },
+        { "name": "Skullbreaker", "type": "slayer", "dodge": 4, "protection": 1, "health": 8, "movement": "3/2" },
+        { "name": "Sneaky Peet", "type": "slayer", "dodge": 5, "protection": 1, "health": 5, "movement": "3/1" }
       ],
       'Maelstroms': [
-        { name: "Blackjaw", type: "maelstrom" },
-        { name: "Fenra", type: "maelstrom" },
-        { name: "Grimgut", type: "maelstrom" },
-        { name: "Jeen", type: "maelstrom" },
-        { name: "Kailinn", type: "maelstrom" },
-        { name: "Luella", type: "maelstrom" },
-        { name: "Titus", type: "maelstrom" }
+        { "name": "Blackjaw", "type": "maelstrom", "dodge": 3, "protection": 2, "health": 8, "movement": "3/2" },
+        { "name": "Fenra", "type": "maelstrom", "dodge": 5, "protection": 1, "health": 5, "movement": "1/4" },
+        { "name": "Grimgut", "type": "maelstrom", "dodge": 2, "protection": 2, "health": 9, "movement": "1/1" },
+        { "name": "Jeen", "type": "maelstrom", "dodge": 3, "protection": 3, "health": 5, "movement": "3/1" },
+        { "name": "Kailinn", "type": "maelstrom", "dodge": 3, "protection": 2, "health": 7, "movement": "4/4" },
+        { "name": "Luella", "type": "maelstrom", "dodge": 2, "protection": 3, "health": 7, "movement": "1/2" },
+        { "name": "Titus", "type": "maelstrom", "dodge": 3, "protection": 3, "health": 5, "movement": "2/2" }
       ],
       'Shapers': [
-        { name: "Lily", type: "shaper" },
-        { name: "Nia", type: "shaper" },
-        { name: "Raith'Marid", type: "shaper" },
-        { name: "Rattlebone", type: "shaper" },
-        { name: "Shayle", type: "shaper" },
-        { name: "Styx", type: "shaper" }
+        { "name": "Lily", "type": "shaper", "dodge": 4, "protection": 1, "health": 7, "movement": "3/3" },
+        { "name": "Nia", "type": "shaper", "dodge": 4, "protection": 2, "health": 6, "movement": "1/2" },
+        { "name": "Raith'Marid", "type": "shaper", "dodge": 2, "protection": 3, "health": 7, "movement": "1/1" },
+        { "name": "Rattlebone", "type": "shaper", "dodge": 3, "protection": 3, "health": 6, "movement": "3/2" },
+        { "name": "Shayle", "type": "shaper", "dodge": 4, "protection": 2, "health": 5, "movement": "2/2" },
+        { "name": "Styx", "type": "shaper", "dodge": 4, "protection": 2, "health": 6, "movement": "2/2" }
       ],
       'Guardians': [
-        { name: "Durthax", type: "guardian" },
-        { name: "Finvarr", type: "guardian" },
-        { name: "Halftusk", type: "guardian" },
-        { name: "Helena", type: "guardian" },
-        { name: "Jaak", type: "guardian" },
-        { name: "Mournblade", type: "guardian" },
-        { name: "Rhodri", type: "guardian" }
+        { "name": "Durthax", "type": "guardian", "dodge": 2, "protection": 1, "health": 14, "movement": "0/1" },
+        { "name": "Finvarr", "type": "guardian", "dodge": 4, "protection": 3, "health": 5, "movement": "2/3" },
+        { "name": "Halftusk", "type": "guardian", "dodge": 3, "protection": 3, "health": 7, "movement": "2/2" },
+        { "name": "Helena", "type": "guardian", "dodge": 3, "protection": 4, "health": 4, "movement": "2/2" },
+        { "name": "Jaak", "type": "guardian", "dodge": 4, "protection": 2, "health": 7, "movement": "3/1" },
+        { "name": "Mournblade", "type": "guardian", "dodge": 2, "protection": 4, "health": 1, "movement": "2/2" },
+        { "name": "Rhodri", "type": "guardian", "dodge": 2, "protection": 4, "health": 7, "movement": "1/2" }
       ]
     }
 
     // Define the scenarios
     const scenarioData = {
-      "Competitive": {
-        "Change": "https://placehold.co/1500x2100?text=Change",
-        "Chaos": "https://placehold.co/1500x2100?text=Chaos",
-        "Construction": "https://placehold.co/1500x2100?text=Construction",
-        "Death": "https://placehold.co/1500x2100?text=Death",
-        "Knowledge": "https://placehold.co/1500x2100?text=Knowledge",
-        "Life": "https://placehold.co/1500x2100?text=Life"
+      "Official (Competitive)": {
+        "Change": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/change.jpg",
+        "Chaos": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/chaos.jpg",
+        "Construction": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/construction.jpg",
+        "Death": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/death.jpg",
+        "Knowledge": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/knowledge.jpg",
+        "Life": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/life.jpg"
       },
-      "Retired": {
-        "Quest": "https://placehold.co/1500x2100?text=Quest"
+      "Official (Out of Rotation)": {
+        "Quest": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/official-scenarios/quest.jpg"
       },
       "Community": {
         "2v2 Change": "https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/homebrew-scenarios/2v2Change.jpg",
@@ -284,6 +282,10 @@
       return ((value % modulus) + modulus) % modulus;
     }
 
+    function pushState(fragment) {
+      history.pushState(null, '', fragment);
+    }
+
     function slugify(text) {
       return text
         .toString()
@@ -316,7 +318,7 @@
       showChampion(nextChampionKey);
     }
 
-    function showChampion(championKey) {
+    function showChampion(championKey, updateState = true) {
       // Reset window position
       window.scrollTo(0, 0);
       // Hide list view
@@ -352,7 +354,9 @@
         element.classList.add('active');
       });
       // Update URL content
-      history.replaceState(null, null, `#champion=${championKey}&card=1`); // Update URL without reloading
+      if (updateState) {
+        pushState(`#champion=${championKey}&card=1`); // Update URL without reloading
+      }
     }
 
     /*---------------------------------------------------------------------------------------------
@@ -382,7 +386,7 @@
 
     function showChampionCard(championKey, fragment) {
       // Ensure the champion is being shown
-      showChampion(championKey);
+      showChampion(championKey, false);
       // Find the active champion
       const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
       // Hide all images
@@ -398,7 +402,7 @@
         element.classList.add('active');
       });
       // Update URL content
-      history.replaceState(null, null, `#${fragment}`); // Update URL without reloading
+      pushState(`#${fragment}`); // Update URL without reloading
     }
 
     /*---------------------------------------------------------------------------------------------
@@ -461,7 +465,7 @@
       });
 
       // Update URL content
-      history.replaceState(null, null, `#scenario=${scenarioKey}`); // Update URL without reloading
+      pushState(`#scenario=${scenarioKey}`); // Update URL without reloading
     }
 
     /*---------------------------------------------------------------------------------------------
@@ -510,6 +514,18 @@
           });
           apply(element.querySelector('.list-item-name'), element => {
             element.textContent = championName;
+          });
+          apply(element.querySelector('.list-item-dodge'), element => {
+            element.textContent = championDefinition['dodge'];
+          });
+          apply(element.querySelector('.list-item-protection'), element => {
+            element.textContent = championDefinition['protection'];
+          });
+          apply(element.querySelector('.list-item-health'), element => {
+            element.textContent = championDefinition['health'];
+          });
+          apply(element.querySelector('.list-item-movement'), element => {
+            element.textContent = championDefinition['movement'];
           });
         }));
         // Add #champion-show-items <div class="champion-card ...">
@@ -612,7 +628,9 @@
     });
 
     // Champion navigation
-    const championHammer = new Hammer(getElementOrThrow('#champion-show-items'));
+    const championHammer = new Hammer(getElementOrThrow('#champion-show-items'), {
+      touchAction: 'manipulation'
+    });
     championHammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
     championHammer.on('swipeup', () => cycleChampion(+1));
     championHammer.on('swipedown', () => cycleChampion(-1));
@@ -641,7 +659,7 @@
       tab.addEventListener("click", (e) => {
         // Set the fragment
         const fragment = e.target.dataset.fragment;
-        history.replaceState(null, null, "#" + fragment); // Update URL without reloading
+        pushState(`#${fragment}`); // Update URL without reloading
         // Hide all show views
         document.querySelectorAll('.show-view').forEach(item => {
           item.classList.add('d-none');
@@ -664,35 +682,51 @@
       }
     }
 
-    window.addEventListener("load", () => {
+    function navigate() {
       const fragment = location.hash.slice(1);
+
       var matched = false;
+
+      // Reset default display state
+      document.querySelectorAll('.show-view').forEach(item => {
+        item.classList.add('d-none');
+      });
+      document.querySelectorAll('.list-view').forEach(item => {
+        item.classList.remove('d-none');
+      });
 
       onMatch(fragment, /champions/, match => {
         matched = true;
       });
       onMatch(fragment, /champion=(.+)&card=(.+)/, match => {
-        showChampionCard(match[1], fragment);
-        matched = true;
+        if (document.querySelector(`[data-fragment="${fragment}"]`)) {
+          showChampionCard(match[1], fragment);
+          matched = true;
+        }
       });
       onMatch(fragment, /scenarios/, match => {
         new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
         matched = true;
       });
       onMatch(fragment, /scenario=(.+)/, match => {
-        new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
-        showScenario(match[1]);
-        matched = true;
+        if (document.querySelector(`[data-fragment="${fragment}"]`)) {
+          new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
+          showScenario(match[1]);
+          matched = true;
+        }
       });
 
       if (!matched) {
-        history.replaceState(null, null, `#champions`);
+        console.log("NOT MATCHED");
+        history.replaceState(null, '', `#champions`);
         new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="champions"]')).show();
       }
 
       getElementOrThrow('body').classList.remove('d-none');
-    });
+    }
 
+    window.addEventListener("load", navigate);
+    window.addEventListener('hashchange', navigate);
   </script>
 </body>
 
