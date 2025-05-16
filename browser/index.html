@@ -32,7 +32,6 @@
       display: flex;
       justify-content: center;
       align-items: start;
-
     }
 
     .fullscreen-image {
@@ -120,29 +119,44 @@
         <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 sticky-top"
           style="top: 42px; z-index: 1010;">
           <div>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-up"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-down"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-left"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-right"></button>
+            <button class="btn btn-sm btn-outline-secondary no-click-style previous-champion">← Previous
+              Champion</button>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-outline-secondary no-click-style next-champion">Next Champion →</button>
           </div>
         </div>
         <!-- Champion Show Items -->
         <div id="champion-show-items" class="p-3">
           <template id="champion-card-template">
             <div class="champion-card-container d-none fullscreen-container" data-champion="my-champion"
-              data-fragment="champion=my-champion&card=1">
-              <img class="fullscreen-image d-none champion-trait" data-fragment="champion=my-champion&card=1"
-                loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Trait" />
-              <img class="fullscreen-image d-none champion-plot" data-fragment="champion=my-champion&card=2"
+              data-name="My Name" data-fragment="champion=my-champion&card=champion-trait">
+              <img class="fullscreen-image d-none champion-trait"
+                data-fragment="champion=my-champion&card=champion-trait" loading="lazy"
+                src="https://placehold.co/1500x2100?text=Champion+Trait" />
+              <img class="fullscreen-image d-none champion-plot" data-fragment="champion=my-champion&card=champion-plot"
                 loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Plot" />
-              <img class="fullscreen-image d-none champion-clash" data-fragment="champion=my-champion&card=3"
-                loading="lazy" src="https://placehold.co/1500x2100?text=Champion+Clash" />
-              <img class="fullscreen-image d-none follower-plot" data-fragment="champion=my-champion&card=4"
+              <img class="fullscreen-image d-none champion-clash"
+                data-fragment="champion=my-champion&card=champion-clash" loading="lazy"
+                src="https://placehold.co/1500x2100?text=Champion+Clash" />
+              <img class="fullscreen-image d-none follower-plot" data-fragment="champion=my-champion&card=follower-plot"
                 loading="lazy" src="https://placehold.co/1500x2100?text=Follower+Plot" />
-              <img class="fullscreen-image d-none follower-clash" data-fragment="champion=my-champion&card=5"
-                loading="lazy" src="https://placehold.co/1500x2100?text=Follower+Clash" />
+              <img class="fullscreen-image d-none follower-clash"
+                data-fragment="champion=my-champion&card=follower-clash" loading="lazy"
+                src="https://placehold.co/1500x2100?text=Follower+Clash" />
             </div>
           </template>
+        </div>
+        <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 sticky-bottom">
+          <div>&nbsp;</div>
+          <div class="d-flex gap-2 card-selectors">
+            <button class="btn btn-sm btn-outline-secondary" data-card="champion-trait">CT</button>
+            <button class="btn btn-sm btn-outline-secondary" data-card="champion-plot">CP</button>
+            <button class="btn btn-sm btn-outline-secondary" data-card="champion-clash">CC</button>
+            <button class="btn btn-sm btn-outline-secondary" data-card="follower-plot">FP</button>
+            <button class="btn btn-sm btn-outline-secondary" data-card="follower-clash">FC</button>
+          </div>
+          <div>&nbsp;</div>
         </div>
       </div>
     </div>
@@ -169,15 +183,18 @@
         <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 sticky-top"
           style="top: 42px; z-index: 1010;">
           <div>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-up"></button>
-            <button class="btn btn-sm btn-outline-secondary bi bi-arrow-down"></button>
+            <button class="btn btn-sm btn-outline-secondary no-click-style previous-scenario">← Previous
+              Scenario</button>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-outline-secondary no-click-style next-scenario">Next Scenario →</button>
           </div>
         </div>
         <!-- Scenario Show Items -->
         <div id="scenario-show-items" class="p-3">
           <template id="scenario-card-template">
             <div class="scenario-card-container d-none fullscreen-container" data-scenario="my-scenario"
-              data-fragment="scenario=my-scenario">
+              data-name="My Name" data-fragment="scenario=my-scenario">
               <img class="fullscreen-image" loading="lazy" src="https://placehold.co/1500x2100?text=My+Scenario" />
             </div>
           </template>
@@ -353,9 +370,25 @@
         element.classList.remove('d-none');
         element.classList.add('active');
       });
+
+      // Find the list of champions
+      const championContainerArray = Array.from(document.querySelectorAll('.champion-card-container'));
+      // Find the active champion container index
+      const activeChampionContainerIndex = championContainerArray.indexOf(championContainer);
+      if (activeChampionContainerIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the previous and next champion names
+      const previousChampionIndex = mod(activeChampionContainerIndex - 1, championContainerArray.length);
+      const previousChampionName = championContainerArray[previousChampionIndex].dataset.name;
+      getElementOrThrow('button.previous-champion').textContent = `← ${previousChampionName}`;
+      const nextChampionIndex = mod(activeChampionContainerIndex + 1, championContainerArray.length);
+      const nextChampionName = championContainerArray[nextChampionIndex].dataset.name;
+      getElementOrThrow('button.next-champion').textContent = `${nextChampionName} →`;
+
       // Update URL content
       if (updateState) {
-        pushState(`#champion=${championKey}&card=1`); // Update URL without reloading
+        pushState(`#champion=${championKey}&card=champion-trait`); // Update URL without reloading
       }
     }
 
@@ -401,6 +434,19 @@
         element.classList.add('fade-in');
         element.classList.add('active');
       });
+      // Deselect buttons
+      document.querySelectorAll('.card-selectors button').forEach(element => {
+        element.classList.add('btn-outline-secondary');
+        element.classList.remove('btn-secondary');
+      });
+      // Select active button
+      const params = new URLSearchParams(fragment);
+      const card = params.get('card');
+      document.querySelectorAll(`.card-selectors button[data-card="${card}"]`).forEach(element => {
+        element.classList.remove('btn-outline-secondary');
+        element.classList.add('btn-secondary');
+      });
+
       // Update URL content
       pushState(`#${fragment}`); // Update URL without reloading
     }
@@ -463,6 +509,21 @@
         element.classList.remove('d-none');
         element.classList.add('active');
       });
+
+      // Find the list of scenarios
+      const scenarioContainerArray = Array.from(document.querySelectorAll('.scenario-card-container'));
+      // Find the active scenario container index
+      const activeScenarioContainerIndex = scenarioContainerArray.indexOf(scenarioContainer);
+      if (activeScenarioContainerIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the previous and next scenario names
+      const previousScenarioIndex = mod(activeScenarioContainerIndex - 1, scenarioContainerArray.length);
+      const previousScenarioName = scenarioContainerArray[previousScenarioIndex].dataset.name;
+      getElementOrThrow('button.previous-scenario').textContent = `← ${previousScenarioName}`;
+      const nextScenarioIndex = mod(activeScenarioContainerIndex + 1, scenarioContainerArray.length);
+      const nextScenarioName = scenarioContainerArray[nextScenarioIndex].dataset.name;
+      getElementOrThrow('button.next-scenario').textContent = `${nextScenarioName} →`;
 
       // Update URL content
       pushState(`#scenario=${scenarioKey}`); // Update URL without reloading
@@ -532,32 +593,33 @@
         champion.show.container.appendChild(createElementFromTemplate(champion.show.templates.card, element => {
           apply(element.querySelector(".champion-card-container"), element => {
             element.dataset.champion = championKey;
-            element.dataset.fragment = `champion=${championKey}&card=1`;
+            element.dataset.name = championName;
+            element.dataset.fragment = `champion=${championKey}&card=champion-trait`;
           });
           apply(element.querySelector(".champion-card-container > .champion-trait"), element => {
             element.alt = `${championName} Trait`;
             element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-trait.webp`
-            element.dataset.fragment = `champion=${championKey}&card=1`;
+            element.dataset.fragment = `champion=${championKey}&card=champion-trait`;
           });
           apply(element.querySelector(".champion-card-container > .champion-plot"), element => {
             element.alt = `${championName} Plot`;
             element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-plot.webp`
-            element.dataset.fragment = `champion=${championKey}&card=2`;
+            element.dataset.fragment = `champion=${championKey}&card=champion-plot`;
           });
           apply(element.querySelector(".champion-card-container > .champion-clash"), element => {
             element.alt = `${championName} Clash`;
             element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-clash.webp`
-            element.dataset.fragment = `champion=${championKey}&card=3`;
+            element.dataset.fragment = `champion=${championKey}&card=champion-clash`;
           });
           apply(element.querySelector(".champion-card-container > .follower-plot"), element => {
             element.alt = `${championName} Follower Plot`;
             element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`
-            element.dataset.fragment = `champion=${championKey}&card=4`;
+            element.dataset.fragment = `champion=${championKey}&card=follower-plot`;
           });
           apply(element.querySelector(".champion-card-container > .follower-clash"), element => {
             element.alt = `${championName} Follower Clash`;
             element.src = `https://raw.githubusercontent.com/godtear-community/game-resources/refs/heads/main/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`
-            element.dataset.fragment = `champion=${championKey}&card=5`;
+            element.dataset.fragment = `champion=${championKey}&card=follower-clash`;
           });
         }));
       });
@@ -613,6 +675,7 @@
         scenario.show.container.appendChild(createElementFromTemplate(scenario.show.templates.card, element => {
           apply(element.querySelector("div"), element => {
             element.dataset.scenario = slugify(name);
+            element.dataset.name = name;
             element.dataset.fragment = `scenario=${slugify(name)}`;
           });
           apply(element.querySelector("img"), element => {
@@ -628,26 +691,28 @@
     });
 
     // Champion navigation
-    const championHammer = new Hammer(getElementOrThrow('#champion-show-items'), {
-      touchAction: 'manipulation'
-    });
+    const championHammer = new Hammer(getElementOrThrow('#champion-show-items'));
     championHammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-    championHammer.on('swipeup', () => cycleChampion(+1));
-    championHammer.on('swipedown', () => cycleChampion(-1));
-    championHammer.on('swipeleft', () => cycleChampionCard(+1));
-    championHammer.on('swiperight', () => cycleChampionCard(-1));
-    getElementOrThrow('#champion-show-view .bi-arrow-up').addEventListener('click', () => { cycleChampion(-1); });
-    getElementOrThrow('#champion-show-view .bi-arrow-down').addEventListener('click', () => { cycleChampion(1); });
-    getElementOrThrow('#champion-show-view .bi-arrow-left').addEventListener('click', () => { cycleChampionCard(-1) });
-    getElementOrThrow('#champion-show-view .bi-arrow-right').addEventListener('click', () => { cycleChampionCard(+1) });
+    championHammer.on('swipeup', () => cycleChampionCard(+1));
+    championHammer.on('swipedown', () => cycleChampionCard(-1));
+    championHammer.on('swipeleft', () => cycleChampion(+1));
+    championHammer.on('swiperight', () => cycleChampion(-1));
+    getElementOrThrow('#champion-show-view .previous-champion').addEventListener('click', () => { cycleChampion(-1); });
+    getElementOrThrow('#champion-show-view .next-champion').addEventListener('click', () => { cycleChampion(1); });
+    document.querySelectorAll('.card-selectors button').forEach(element => {
+      element.addEventListener('click', event => {
+        const activeChampion = getElementOrThrow('.champion-card-container.active').dataset.champion;
+        showChampionCard(activeChampion, `champion=${activeChampion}&card=${event.target.dataset.card}`);
+      });
+    });
 
     // Scenario navigation
     const scenarioHammer = new Hammer(getElementOrThrow('#scenario-show-items'));
     scenarioHammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-    scenarioHammer.on('swipeup', () => cycleScenario(+1));
-    scenarioHammer.on('swipedown', () => cycleScenario(-1));
-    getElementOrThrow('#scenario-show-view .bi-arrow-up').addEventListener('click', () => { cycleScenario(-1) });
-    getElementOrThrow('#scenario-show-view .bi-arrow-down').addEventListener('click', () => { cycleScenario(+1) });
+    scenarioHammer.on('swipeleft', () => cycleScenario(+1));
+    scenarioHammer.on('swiperight', () => cycleScenario(-1));
+    getElementOrThrow('#scenario-show-view .previous-scenario').addEventListener('click', () => { cycleScenario(-1) });
+    getElementOrThrow('#scenario-show-view .next-scenario').addEventListener('click', () => { cycleScenario(+1) });
 
     /*---------------------------------------------------------------------------------------------
      * TAB CONFIGURATION
