@@ -260,24 +260,24 @@
     // Define the scenarios
     const scenarioData = {
       "Official (Competitive)": {
-        "Change": "assets/official-scenarios/change.jpg",
-        "Chaos": "assets/official-scenarios/chaos.jpg",
-        "Construction": "assets/official-scenarios/construction.jpg",
-        "Death": "assets/official-scenarios/death.jpg",
-        "Knowledge": "assets/official-scenarios/knowledge.jpg",
-        "Life": "assets/official-scenarios/life.jpg"
+        "Change": "/assets/official-scenarios/change.jpg",
+        "Chaos": "/assets/official-scenarios/chaos.jpg",
+        "Construction": "/assets/official-scenarios/construction.jpg",
+        "Death": "/assets/official-scenarios/death.jpg",
+        "Knowledge": "/assets/official-scenarios/knowledge.jpg",
+        "Life": "/assets/official-scenarios/life.jpg"
       },
       "Official (Out of Rotation)": {
-        "Quest": "assets/official-scenarios/quest.jpg"
+        "Quest": "/assets/official-scenarios/quest.jpg"
       },
       "Community": {
-        "2v2 Change": "assets/homebrew-scenarios/2v2Change.jpg",
-        "2v2 Chaos": "assets/homebrew-scenarios/2v2Chaos.jpg",
-        "2v2 Construction": "assets/homebrew-scenarios/2v2Construction.jpg",
-        "2v2 Death": "assets/homebrew-scenarios/2v2Death.jpg",
-        "2v2 Knowledge": "assets/homebrew-scenarios/2v2Knowledge.jpg",
-        "Plenty": "assets/homebrew-scenarios/Plenty.jpg",
-        "Trade": "assets/homebrew-scenarios/Trade.jpg"
+        "2v2 Change": "/assets/homebrew-scenarios/2v2Change.jpg",
+        "2v2 Chaos": "/assets/homebrew-scenarios/2v2Chaos.jpg",
+        "2v2 Construction": "/assets/homebrew-scenarios/2v2Construction.jpg",
+        "2v2 Death": "/assets/homebrew-scenarios/2v2Death.jpg",
+        "2v2 Knowledge": "/assets/homebrew-scenarios/2v2Knowledge.jpg",
+        "Plenty": "/assets/homebrew-scenarios/Plenty.jpg",
+        "Trade": "/assets/homebrew-scenarios/Trade.jpg"
       }
     };
 
@@ -571,7 +571,7 @@
             element.dataset.champion = championKey;
           });
           apply(element.querySelector('.list-item-icon'), element => {
-            element.src = `assets/champion-icons/${championType}-${championKey}.png`;
+            element.src = `/assets/champion-icons/${championType}-${championKey}.png`;
           });
           apply(element.querySelector('.list-item-name'), element => {
             element.textContent = championName;
@@ -598,27 +598,27 @@
           });
           apply(element.querySelector(".champion-card-container > .champion-trait"), element => {
             element.alt = `${championName} Trait`;
-            element.src = `assets/champion-cards/webp/${championType}-${championKey}-trait.webp`
+            element.src = `/assets/champion-cards/webp/${championType}-${championKey}-trait.webp`
             element.dataset.fragment = `champion=${championKey}&card=champion-trait`;
           });
           apply(element.querySelector(".champion-card-container > .champion-plot"), element => {
             element.alt = `${championName} Plot`;
-            element.src = `assets/champion-cards/webp/${championType}-${championKey}-plot.webp`
+            element.src = `/assets/champion-cards/webp/${championType}-${championKey}-plot.webp`
             element.dataset.fragment = `champion=${championKey}&card=champion-plot`;
           });
           apply(element.querySelector(".champion-card-container > .champion-clash"), element => {
             element.alt = `${championName} Clash`;
-            element.src = `assets/champion-cards/webp/${championType}-${championKey}-clash.webp`
+            element.src = `/assets/champion-cards/webp/${championType}-${championKey}-clash.webp`
             element.dataset.fragment = `champion=${championKey}&card=champion-clash`;
           });
           apply(element.querySelector(".champion-card-container > .follower-plot"), element => {
             element.alt = `${championName} Follower Plot`;
-            element.src = `assets/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`
+            element.src = `/assets/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`
             element.dataset.fragment = `champion=${championKey}&card=follower-plot`;
           });
           apply(element.querySelector(".champion-card-container > .follower-clash"), element => {
             element.alt = `${championName} Follower Clash`;
-            element.src = `assets/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`
+            element.src = `/assets/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`
             element.dataset.fragment = `champion=${championKey}&card=follower-clash`;
           });
         }));
