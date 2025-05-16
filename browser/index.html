@@ -339,11 +339,39 @@
       const nextChampionContainerIndex = mod(activeChampionContainerIndex + adjustment, championContainerArray.length);
       const nextChampionContainer = championContainerArray[nextChampionContainerIndex];
       const nextChampionKey = nextChampionContainer.dataset.champion;
+      // Keep the current card type active
+      const params = new URLSearchParams(location.hash.slice(1));
+      const card = params.get('card') || 'champion-trait';
       // Show the champion
-      showChampion(nextChampionKey);
+      showChampionCard(nextChampionKey, `champion=${nextChampionKey}&card=${card}`);
     }
 
-    function showChampion(championKey, updateState = true) {
+    /*---------------------------------------------------------------------------------------------
+     * NAVIGATION FUNCTIONS - CHAMPION CARD
+     *-------------------------------------------------------------------------------------------*/
+
+    function cycleChampionCard(adjustment) {
+      // Find the active champion
+      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
+      // Find the list of champion cards
+      const championCardArray = Array.from(activeChampionContainer.querySelectorAll('img'));
+      // Find the active champion card
+      const activeChampionCard = getElementOrThrow('.champion-card-container.active > img.active')
+      // Find the active champion card index
+      const activeChampionCardIndex = championCardArray.indexOf(activeChampionCard);
+      if (activeChampionCardIndex < 0) {
+        throw 'Element not in array.';
+      }
+      // Find the next champion card index (handling positive and negative wrapping)
+      const nextChampionCardIndex = mod(activeChampionCardIndex + adjustment, championCardArray.length);
+      const nextChampionCard = championCardArray[nextChampionCardIndex];
+      const nextChampionKey = activeChampionContainer.dataset.champion;
+      const nextChampionCardFragment = nextChampionCard.dataset.fragment;
+      // Show the champion
+      showChampionCard(nextChampionKey, nextChampionCardFragment);
+    }
+
+    function showChampionCard(championKey, fragment) {
       // Reset window position
       window.scrollTo(0, 0);
       // Hide list view
@@ -394,50 +422,14 @@
       const nextChampionName = championContainerArray[nextChampionIndex].dataset.name;
       getElementOrThrow('button.next-champion').textContent = `${nextChampionName} →`;
 
-      // Update URL content
-      if (updateState) {
-        pushState(`#champion=${championKey}&card=champion-trait`); // Update URL without reloading
-      }
-    }
-
-    /*---------------------------------------------------------------------------------------------
-     * NAVIGATION FUNCTIONS - CHAMPION CARD
-     *-------------------------------------------------------------------------------------------*/
-
-    function cycleChampionCard(adjustment) {
-      // Find the active champion
-      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
-      // Find the list of champion cards
-      const championCardArray = Array.from(activeChampionContainer.querySelectorAll('img'));
-      // Find the active champion card
-      const activeChampionCard = getElementOrThrow('.champion-card-container.active > img.active')
-      // Find the active champion card index
-      const activeChampionCardIndex = championCardArray.indexOf(activeChampionCard);
-      if (activeChampionCardIndex < 0) {
-        throw 'Element not in array.';
-      }
-      // Find the next champion card index (handling positive and negative wrapping)
-      const nextChampionCardIndex = mod(activeChampionCardIndex + adjustment, championCardArray.length);
-      const nextChampionCard = championCardArray[nextChampionCardIndex];
-      const nextChampionKey = activeChampionContainer.dataset.champion;
-      const nextChampionCardFragment = nextChampionCard.dataset.fragment;
-      // Show the champion
-      showChampionCard(nextChampionKey, nextChampionCardFragment);
-    }
-
-    function showChampionCard(championKey, fragment) {
-      // Ensure the champion is being shown
-      showChampion(championKey, false);
-      // Find the active champion
-      const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
       // Hide all images
-      activeChampionContainer.querySelectorAll('img').forEach(element => {
+      championContainer.querySelectorAll('img').forEach(element => {
         element.classList.add('d-none');
         element.classList.remove('fade-in');
         element.classList.remove('active');
       });
       // Display the selected image
-      apply(getElementOrThrow(`[data-fragment="${fragment}"]`, activeChampionContainer), element => {
+      apply(getElementOrThrow(`[data-fragment="${fragment}"]`, championContainer), element => {
         element.classList.remove('d-none');
         element.classList.add('fade-in');
         element.classList.add('active');
