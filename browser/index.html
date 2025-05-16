@@ -57,6 +57,14 @@
         opacity: 1;
       }
     }
+
+    @media (hover: none) {
+      .btn.btn-outline-secondary:hover {
+        color: var(--bs-btn-color);
+        background-color: var(--bs-btn-bg);
+        border-color: var(--bs-btn-border-color);
+      }
+    }
   </style>
 </head>
 
@@ -626,7 +634,7 @@
     });
     // Champion list click
     champion.list.container.querySelectorAll(".list-item").forEach(item => {
-      item.addEventListener("click", () => { showChampion(item.dataset.champion); });
+      item.addEventListener("click", () => { showChampionCard(item.dataset.champion, `champion=${item.dataset.champion}&card=champion-trait`); });
     });
 
     /*---------------------------------------------------------------------------------------------
