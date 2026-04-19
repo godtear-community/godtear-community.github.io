@@ -55,6 +55,10 @@
       cursor: pointer;
     }
 
+    .dropdown-item.active small.text-muted {
+      color: rgba(255, 255, 255, 0.75) !important;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -141,6 +145,32 @@
           <div>
             <button class="btn btn-sm btn-outline-secondary no-click-style previous-champion">← Previous
               Champion</button>
+          </div>
+          <div class="btn-group">
+            <button
+              class="btn btn-sm btn-outline-secondary dropdown-toggle no-click-style"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Community
+            </button>
+
+            <ul class="dropdown-menu" style="cursor: pointer;">
+              <li>
+                <a class="dropdown-item card-source-dropdown-item" data-value="Official">
+                  Official<br/><small class="text-muted">Originally release cards.</small>
+                </a>
+              </li>
+              <li>
+                <a class="active dropdown-item card-source-dropdown-item" data-value="Community">
+                  Community<br/><small class="text-muted">Community balanced cards.</small>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item card-source-dropdown-item" data-value="Experimental">
+                  Experimental<br/><small class="text-muted">Cards being actively playtested.</small>
+                </a>
+              </li>
+            </ul>
           </div>
           <div>
             <button class="btn btn-sm btn-outline-secondary no-click-style next-champion">Next Champion →</button>
@@ -356,6 +386,14 @@
      * DATA
      *-------------------------------------------------------------------------------------------*/
 
+    const communityChampionData = {
+      "Community": {},
+      "Experimental": {
+        "Raith'Marid": true,
+        "Rattlebone": true
+      }
+    };
+
     // Define the champions
     const championData = {
       'Slayers': [
@@ -488,6 +526,31 @@
      * NAVIGATION FUNCTIONS - CHAMPION CARD
      *-------------------------------------------------------------------------------------------*/
 
+    let cardSourceMode = 'Community';
+
+    // Handle selection CARD SOURCE DROPDOWN
+    document.addEventListener('click', (e) => {
+      const item = e.target.closest('.card-source-dropdown-item');
+      if (!item) return;
+
+      e.preventDefault();
+
+      cardSourceMode = item.dataset.value;
+
+      const btnGroup = item.closest('.btn-group');
+      const button = btnGroup.querySelector('.dropdown-toggle');
+
+      button.textContent = item.dataset.value;
+
+      btnGroup.querySelectorAll('.dropdown-item')
+        .forEach(el => el.classList.remove('active'));
+
+      item.classList.add('active');
+
+      // Refresh the current champion card
+      cycleChampionCard(0);
+    });
+
     function cycleChampionCard(adjustment) {
       // Find the active champion
       const activeChampionContainer = getElementOrThrow('.champion-card-container.active');
@@ -560,11 +623,14 @@
       const nextChampionName = championContainerArray[nextChampionIndex].dataset.name;
       getElementOrThrow('button.next-champion').textContent = `${nextChampionName} →`;
 
-      // Hide all images
+      // Hide all images and set the src
       championContainer.querySelectorAll('img').forEach(element => {
         element.classList.add('d-none');
         element.classList.remove('fade-in');
         element.classList.remove('active');
+
+        element.src = element.dataset[`src${cardSourceMode}`];
+        void element.offsetWidth; // Force browser to reset animations like fade in
       });
       // Display the selected image
       apply(getElementOrThrow(`[data-fragment="${fragment}"]`, championContainer), element => {
@@ -736,28 +802,68 @@
           });
           apply(element.querySelector(".champion-card-container > .champion-trait"), element => {
             element.alt = `${championName} Trait`;
-            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-trait.webp`
             element.dataset.fragment = `champion=${championKey}&card=champion-trait`;
+            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-trait.webp`;
+            
+            element.dataset.srcOfficial = element.src;
+            element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName] != undefined)
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-trait.webp`
+              : element.dataset.srcOfficial;
+            element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-trait.webp`
+              : element.dataset.srcCommunity;
           });
           apply(element.querySelector(".champion-card-container > .champion-plot"), element => {
             element.alt = `${championName} Plot`;
-            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-plot.webp`
+            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-plot.webp`;
             element.dataset.fragment = `champion=${championKey}&card=champion-plot`;
+            
+            element.dataset.srcOfficial = element.src;
+            element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-plot.webp`
+              : element.dataset.srcOfficial;
+            element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-plot.webp`
+              : element.dataset.srcCommunity;
           });
           apply(element.querySelector(".champion-card-container > .champion-clash"), element => {
             element.alt = `${championName} Clash`;
-            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-clash.webp`
+            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-clash.webp`;
             element.dataset.fragment = `champion=${championKey}&card=champion-clash`;
+            
+            element.dataset.srcOfficial = element.src;
+            element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-clash.webp`
+              : element.dataset.srcOfficial;
+            element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-clash.webp`
+              : element.dataset.srcCommunity;
           });
           apply(element.querySelector(".champion-card-container > .follower-plot"), element => {
             element.alt = `${championName} Follower Plot`;
-            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`
+            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-plot-followers.webp`;
             element.dataset.fragment = `champion=${championKey}&card=follower-plot`;
+            
+            element.dataset.srcOfficial = element.src;
+            element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-plot.webp`
+              : element.dataset.srcOfficial;
+            element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-plot.webp`
+              : element.dataset.srcCommunity;
           });
           apply(element.querySelector(".champion-card-container > .follower-clash"), element => {
             element.alt = `${championName} Follower Clash`;
-            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`
+            element.src = `../../assets/champion-cards/webp/${championType}-${championKey}-clash-followers.webp`;
             element.dataset.fragment = `champion=${championKey}&card=follower-clash`;
+            
+            element.dataset.srcOfficial = element.src;
+            element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-clash.webp`
+              : element.dataset.srcOfficial;
+            element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
+              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-clash.webp`
+              : element.dataset.srcCommunity;
           });
         }));
       });

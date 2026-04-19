@@ -7,6 +7,9 @@
   <title>Godtear Browser</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="scripts/dice-utils.js"></script>
+  <script src="scripts/utils.js"></script>
   <style>
     h5 {
       margin-bottom: 0;
@@ -23,6 +26,10 @@
 
     .col-shrinkable {
       flex: 1 1 0;
+    }
+
+    .compact-select {
+      padding: 0.1rem 2rem 0.1rem 0.25rem;
     }
 
     .fullscreen-container {
@@ -76,7 +83,12 @@
         data-fragment="champions">Champions</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#scenario-tab-content" data-bs-toggle="tab" data-fragment="scenarios">Scenarios</a>
+      <a class="nav-link" href="#scenario-tab-content" data-bs-toggle="tab" 
+        data-fragment="scenarios">Scenarios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#probabilities-tab-content" data-bs-toggle="tab"
+        data-fragment="probabilities">Probabilities</a>
     </li>
   </ul>
   <!-- Hide Scrolling Content -->
@@ -206,6 +218,132 @@
               <img class="fullscreen-image" loading="lazy" src="https://placehold.co/1500x2100?text=My+Scenario" />
             </div>
           </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Probabilities Tab Content -->
+    <div id="probabilities-tab-content" class="tab-pane fade">
+      <ul class="nav nav-underline" style="padding-left: 1em;">
+        <li class="nav-item">
+          <button class="nav-link active" 
+            data-bs-target="#dice-probabilities"
+            data-bs-toggle="tab"
+            data-fragment="dice-probabilities"
+          >Dice</a>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" 
+            data-bs-target="#attack-probabilities" 
+            data-bs-toggle="tab"
+            data-fragment="attack-probabilities"
+          >Attacks</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- Dice Probabilities class="p-3 list-view"> -->
+        <div id="dice-probabilities" class="tab-pane fade show active p-3">
+          <img style="width: 100%; max-width: 900px;" src="/assets/dice-probabilities.webp" />
+        </div>
+
+        <!-- Attack Probabilities -->
+        <div id="attack-probabilities" class="tab-pane fade p-3">
+          
+          <!-- Attack Inputs -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h6 class="mb-0">Attack Profiles</h6>
+              <button id="add-attack" class="btn btn-secondary btn-sm">+ Attack Profile</button>
+            </div>
+            <div id="attack-list" class="vstack gap-1">
+              <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
+                <label class="form-label mb-0">Accuracy</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="accuracy">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <label class="form-label mb-0">Damage</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="damage">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <label class="form-label mb-0">Pierce</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="pierce">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Defense Inputs -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h6 class="mb-0">Defense Profiles</h6>
+              <button id="add-defense" class="btn btn-secondary btn-sm">+ Defense Profile</button>
+            </div>
+            <div id="defense-list" class="vstack gap-1">
+              <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
+                <label class="form-label mb-0">Dodge</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="dodge">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+                <label class="form-label mb-0">Protection</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="protection">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="container" style="padding:0;"></div>
+            <div class="mt-4">
+              <h6>Chart: Chance to Deal X or More Damage</h6>
+              <div class="fullscreen-container">
+                <canvas class="fullscreen-image" id="statChart" height="300"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -715,6 +853,92 @@
     getElementOrThrow('#scenario-show-view .next-scenario').addEventListener('click', () => { cycleScenario(+1) });
 
     /*---------------------------------------------------------------------------------------------
+     * PROBABILITY CHART
+     *-------------------------------------------------------------------------------------------*/
+
+    getElementOrThrow('#attack-probabilities').addEventListener('change', (e) => {
+      if (e.target.matches('select')) {
+        updateChart();
+      }
+    });
+    
+    getElementOrThrow('#add-attack').addEventListener('click', () => {
+      addStatRow(getElementOrThrow('#attack-list'), true);
+    });
+
+    getElementOrThrow('#add-defense').addEventListener('click', () => {
+      addStatRow(getElementOrThrow('#defense-list'), true);
+    });
+
+    function addStatRow(container, allowRemove = true) {
+      // Clone the template
+      let newRow = container.firstElementChild.cloneNode(true);
+      // Add the X removal button
+      if (allowRemove) {
+        let removeButton = newRow.querySelector('.remove-btn');
+        removeButton.style.removeProperty('visibility');
+        removeButton.addEventListener('click', () => {
+          container.removeChild(newRow);
+          updateChart();
+        });
+      }
+      // Add the row
+      container.appendChild(newRow);
+      // Update the chart
+      updateChart();
+    }
+    
+    function updateChart() {
+      // let attackProfiles = [[10,4]];
+      // let defenseProfiles = [[0,0]];
+      const attackProfiles = Array.from(getElementOrThrow('#attack-list').children).map(row => ({
+        'accuracy': parseInt(row.querySelector('[name="accuracy"]').value),
+        'damage': parseInt(row.querySelector('[name="damage"]').value),
+        'pierce': parseInt(row.querySelector('[name="pierce"]').value)
+      }));
+      
+      const defenseProfiles = Array.from(getElementOrThrow('#defense-list').children).map(row => ({
+        'dodge': parseInt(row.querySelector('[name="dodge"]').value),
+        'protection': parseInt(row.querySelector('[name="protection"]').value)
+      }));
+
+      const datasets = [];
+      let maxWounds = 0;
+      attackProfiles.forEach(attackProfile => {
+        maxWounds = Math.max(maxWounds, attackProfile.damage * 2);
+        defenseProfiles.forEach(defenseProfile => {
+          const { averageDamage, chanceToHit, damageProbabilities } = calculateDamage({
+            ...attackProfile, ...defenseProfile
+          });
+
+          console.log(attackProfile.pierce);
+          const pierceSublabel = (attackProfile.pierce)
+            ? `p${attackProfile.pierce}`
+            : '';
+          const label = `${attackProfile.accuracy}/${attackProfile.damage}${pierceSublabel} vs ` +
+            `${defenseProfile.dodge}/${defenseProfile.protection} - ` +
+            `${chanceToHit * 100}% hit, ${averageDamage} avg damage`;
+
+          datasets.push({
+            label,
+            data: damageProbabilities.map(item => item * 100),
+            borderWidth: 2,
+            fill: false,
+            tension: 0.1
+          });
+        });
+      });
+
+      if (chart) {
+        const labels = Array.from({ length: maxWounds }, (_, i) => i + 1);
+        chart.data.labels = labels;
+
+        chart.data.datasets = datasets;
+        chart.update();
+      }
+    }
+
+    /*---------------------------------------------------------------------------------------------
      * TAB CONFIGURATION
      *-------------------------------------------------------------------------------------------*/
 
@@ -769,6 +993,15 @@
           matched = true;
         }
       });
+      onMatch(fragment, /(attack|dice)?-?probabilities/, match => {
+        if (match[1] === 'attack') {
+          new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="attack-probabilities"]')).show();
+        } else {
+          new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="dice-probabilities"]')).show();
+        }
+        new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="probabilities"]')).show();
+        matched = true;
+      });
       onMatch(fragment, /scenarios/, match => {
         new bootstrap.Tab(getElementOrThrow('.nav-link[data-fragment="scenarios"]')).show();
         matched = true;
@@ -792,6 +1025,34 @@
 
     window.addEventListener("load", navigate);
     window.addEventListener('hashchange', navigate);
+
+    // Chart
+    const ctx = document.getElementById('statChart').getContext('2d');
+    let chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: Array.from({ length: 11 }, (_, i) => i), datasets: [] },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            align: "start"
+          },
+          tooltip: {
+            callbacks: {
+              title: () => null,
+              label: function(context) {
+                return `${context.parsed.y}% chance to do at least ${context.label} damage.`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Wounds (≥)' }, ticks: { stepSize: 1 } },
+          y: { title: { display: true, text: '% Chance' }, min: 0, max: 100 }
+        }
+      }
+    });
+    updateChart();
   </script>
 </body>
 
