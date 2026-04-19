@@ -249,98 +249,99 @@
 
         <!-- Attack Probabilities -->
         <div id="attack-probabilities" class="tab-pane fade p-3">
-          <div class="container" style="padding:0;">
-            <!-- Attack Inputs -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <h6 class="mb-0">Attack Profiles</h6>
-                <button id="add-attack" class="btn btn-secondary btn-sm">+ Attack Profile</button>
-              </div>
-              <div id="attack-list" class="vstack gap-1">
-                <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
-                  <label class="form-label mb-0">Accuracy</label>
-                  <select class="form-select form-select-sm compact-select w-auto" name="accuracy">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                  <label class="form-label mb-0">Damage</label>
-                  <select class="form-select form-select-sm compact-select w-auto" name="damage">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                  <label class="form-label mb-0">Pierce</label>
-                  <select class="form-select form-select-sm compact-select w-auto" name="pierce">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                  <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
-                </div>
+          
+          <!-- Attack Inputs -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h6 class="mb-0">Attack Profiles</h6>
+              <button id="add-attack" class="btn btn-secondary btn-sm">+ Attack Profile</button>
+            </div>
+            <div id="attack-list" class="vstack gap-1">
+              <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
+                <label class="form-label mb-0">Accuracy</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="accuracy">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <label class="form-label mb-0">Damage</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="damage">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <label class="form-label mb-0">Pierce</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="pierce">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
               </div>
             </div>
+          </div>
 
-            <!-- Defense Inputs -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <h6 class="mb-0">Defense Profiles</h6>
-                <button id="add-defense" class="btn btn-secondary btn-sm">+ Defense Profile</button>
-              </div>
-              <div id="defense-list" class="vstack gap-1">
-                <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
-                  <label class="form-label mb-0">Dodge</label>
-                  <select class="form-select form-select-sm compact-select w-auto" name="dodge">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                  </select>
-                  <label class="form-label mb-0">Protection</label>
-                  <select class="form-select form-select-sm compact-select w-auto" name="protection">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </select>
-                  <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
-                </div>
+          <!-- Defense Inputs -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h6 class="mb-0">Defense Profiles</h6>
+              <button id="add-defense" class="btn btn-secondary btn-sm">+ Defense Profile</button>
+            </div>
+            <div id="defense-list" class="vstack gap-1">
+              <div class="d-flex flex-wrap align-items-center gap-1 bg-light stat-row rounded small">
+                <label class="form-label mb-0">Dodge</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="dodge">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+                <label class="form-label mb-0">Protection</label>
+                <select class="form-select form-select-sm compact-select w-auto" name="protection">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-sm ms-auto remove-btn" style="font-size:0.7em;visibility:hidden;">✕</button>
               </div>
             </div>
           </div>
 
           <!-- Chart -->
-          <div class="mt-4">
-            <h6>Chart: Chance to Deal X or More Damage</h6>
-            <div class="fullscreen-container">
-              <canvas class="fullscreen-image" id="statChart" height="300"></canvas>
+          <div class="container" style="padding:0;"></div>
+            <div class="mt-4">
+              <h6>Chart: Chance to Deal X or More Damage</h6>
+              <div class="fullscreen-container">
+                <canvas class="fullscreen-image" id="statChart" height="300"></canvas>
+              </div>
             </div>
           </div>
         </div>
