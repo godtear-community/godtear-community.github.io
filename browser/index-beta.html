@@ -1036,6 +1036,14 @@
         plugins: {
           legend: {
             align: "start"
+          },
+          tooltip: {
+            callbacks: {
+              title: () => null,
+              label: function(context) {
+                return `${context.parsed.y}% chance to do at least ${context.label} damage.`;
+              }
+            }
           }
         },
         scales: {

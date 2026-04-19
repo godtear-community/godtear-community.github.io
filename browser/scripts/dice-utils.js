@@ -9,7 +9,7 @@
 // * The percent chance of rolling the value is p/(6^d)
 // * The percent chance of rolling at least the value is (p0+p1+p2...+pn)/(6^d)
 const DICE_VALUES = [0, 0, 1, 1, 1, 2];
-const MAX_DICE = 15;
+const MAX_DICE = 20;
 const MAX_DICE_SUM = MAX_DICE * 2;
 const PERMUTATION_COUNTS = Array.from({ length: MAX_DICE + 1 }, () =>
   Array(MAX_DICE_SUM + 1).fill(0)
