@@ -387,9 +387,10 @@
      *-------------------------------------------------------------------------------------------*/
 
     const communityChampionData = {
-      "Community": {},
+      "Community": {
+        "Raith'Marid": true
+      },
       "Experimental": {
-        "Raith'Marid": true,
         "Rattlebone": true,
         "Morrigan": true,
         "Rangosh": true,
@@ -814,7 +815,7 @@
             
             element.dataset.srcOfficial = element.src;
             element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName] != undefined)
-              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-trait.webp`
+              ? `../../assets/champion-cards/community-balance/v1/webp/${championType}-${championKey}-trait.webp`
               : element.dataset.srcOfficial;
             element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
               ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-trait.webp`
@@ -827,7 +828,7 @@
             
             element.dataset.srcOfficial = element.src;
             element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
-              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-plot.webp`
+              ? `../../assets/champion-cards/community-balance/v1/webp/${championType}-${championKey}-champion-plot.webp`
               : element.dataset.srcOfficial;
             element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
               ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-plot.webp`
@@ -840,7 +841,7 @@
             
             element.dataset.srcOfficial = element.src;
             element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
-              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-clash.webp`
+              ? `../../assets/champion-cards/community-balance/v1/webp/${championType}-${championKey}-champion-clash.webp`
               : element.dataset.srcOfficial;
             element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
               ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-champion-clash.webp`
@@ -853,7 +854,7 @@
             
             element.dataset.srcOfficial = element.src;
             element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
-              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-plot.webp`
+              ? `../../assets/champion-cards/community-balance/v1/webp/${championType}-${championKey}-followers-plot.webp`
               : element.dataset.srcOfficial;
             element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
               ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-plot.webp`
@@ -866,7 +867,7 @@
             
             element.dataset.srcOfficial = element.src;
             element.dataset.srcCommunity = (communityChampionData?.['Community']?.[championName])
-              ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-clash.webp`
+              ? `../../assets/champion-cards/community-balance/v1/webp/${championType}-${championKey}-followers-clash.webp`
               : element.dataset.srcOfficial;
             element.dataset.srcExperimental = (communityChampionData?.['Experimental']?.[championName])
               ? `../../assets/champion-cards/community-balance/webp/${championType}-${championKey}-followers-clash.webp`
