@@ -850,17 +850,17 @@
 
                 case "official":
                     basePath =
-                        "../../assets/champion-cards/webp/";
+                        "../assets/champion-cards/webp/";
                     break;
 
                 case "community":
                     basePath =
-                        "../../assets/champion-cards/community-balance/v1/webp/";
+                        "../assets/champion-cards/community-balance/v1/webp/";
                     break;
 
                 case "experimental":
                     basePath =
-                        "../../assets/champion-cards/community-balance/webp/";
+                        "../assets/champion-cards/community-balance/webp/";
                     break;
 
                 default:
@@ -896,7 +896,7 @@
                 championKey(champion.name);
 
             return (
-                `../../assets/champion-icons/` +
+                `../assets/champion-icons/` +
                 `${championType}-${key}.png`
             );
         }
