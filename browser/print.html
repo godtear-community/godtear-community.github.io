@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Champion Cards</title>
+
+   <style>
+  /* ==========================================================================
+     Page setup
+     ========================================================================== */
+
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #ddd;
+  }
+
+
+  /* ==========================================================================
+     Configuration screen
+     ========================================================================== */
+
+  #configuration {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  #configuration h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+  }
+
+
+  /* ==========================================================================
+     Selection links
+     ========================================================================== */
+
+  .selection-links {
+    margin-bottom: 25px;
+  }
+
+  .selection-links a {
+    display: block;
+    margin: 8px 0;
+    color: #0645ad;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+
+  /* ==========================================================================
+     Champion selection
+     ========================================================================== */
+
+  .champion-selection h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .champion-group {
+    margin-bottom: 24px;
+  }
+
+  .champion-group h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+
+  .champion-checkbox {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+    font-size: 15px;
+    min-height: 32px;
+  }
+
+  .champion-checkbox input {
+    margin: 0 8px 0 0;
+    flex-shrink: 0;
+  }
+
+  .champion-icon-link {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .champion-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+
+  /* ==========================================================================
+     Generate button
+     ========================================================================== */
+
+  #generate-button {
+    margin-top: 10px;
+    padding: 10px 24px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+
+  /* ==========================================================================
+     Error message
+     ========================================================================== */
+
+  .error {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+
+    border: 2px solid #b00020;
+    background: #ffe5e5;
+    color: #b00020;
+
+    font-size: 18px;
+    text-align: center;
+  }
+
+
+  /* ==========================================================================
+     Screen print controls
+     ========================================================================== */
+
+  .print-controls {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .print-controls button {
+    font-size: 16px;
+    padding: 8px 18px;
+    cursor: pointer;
+  }
+
+
+  /* ==========================================================================
+     Printable page
+
+     Letter:
+       8.5" × 11"
+
+     Page padding:
+       0.25" on all four sides
+
+     Cards:
+       2.5" × 3.5"
+
+     Layout:
+       3 columns × 3 rows
+
+     There is ZERO spacing between cards.
+     ========================================================================== */
+
+  .print-page {
+    width: 8.5in;
+    height: 11in;
+
+    /*
+     * Exactly 0.25" of padding on every side.
+     */
+    padding: 0.25in;
+
+    /*
+     * Three 2.5" cards = 7.5"
+     *
+     * Available width inside the page:
+     * 8.5" - 0.5" padding = 8"
+     *
+     * justify-content: center therefore leaves:
+     * (8" - 7.5") / 2 = 0.25"
+     *
+     * on the left and right of the card grid.
+     */
+    display: grid;
+
+    grid-template-columns:
+      repeat(3, 2.5in);
+
+    grid-template-rows:
+      repeat(3, 3.5in);
+
+    /*
+     * Absolutely no spacing between cards.
+     */
+    gap: 0;
+
+    /*
+     * Center the 3 × 3 grid horizontally.
+     */
+    justify-content: center;
+
+    /*
+     * Start the cards at the top of the
+     * content area, immediately after the
+     * 0.25" top padding.
+     */
+    align-content: start;
+
+    /*
+     * White page background.
+     */
+    background: white;
+
+    /*
+     * Every .print-page starts on a new
+     * physical page when printed.
+     */
+    break-after: page;
+    page-break-after: always;
+  }
+
+
+  /* ==========================================================================
+     Individual cards
+     ========================================================================== */
+
+  .card {
+    width: 2.5in;
+    height: 3.5in;
+
+    /*
+     * No spacing whatsoever around images.
+     */
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    /*
+     * Prevent inline-image baseline behavior from
+     * introducing unexpected spacing.
+     */
+    display: block;
+
+    /*
+     * Force the image to exactly the card dimensions.
+     */
+    object-fit: fill;
+
+    /*
+     * Keep cards together during printing.
+     */
+    break-inside: avoid;
+
+    /*
+     * Preserve the card artwork when printing.
+     */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+
+  /* ==========================================================================
+     Screen preview
+     ========================================================================== */
+
+  @media screen {
+
+    .print-page {
+      /*
+       * Space between preview pages on screen.
+       * This does NOT affect the printed output.
+       */
+      margin: 20px auto;
+
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+  }
+
+
+  /* ==========================================================================
+     PRINT
+     ========================================================================== */
+
+  @media print {
+
+    /*
+     * Absolutely hide anything that isn't part
+     * of the printable cards.
+     *
+     * !important is intentional here so that an
+     * inline display:block from JavaScript cannot
+     * cause the print button to appear.
+     */
+    #configuration,
+    #print-controls,
+    #error {
+      display: none !important;
+    }
+
+
+    /*
+     * Remove all browser-default document spacing.
+     */
+    html,
+    body {
+      width: 8.5in;
+      height: auto;
+
+      margin: 0;
+      padding: 0;
+
+      background: white;
+    }
+
+
+    /*
+     * The cards container itself must not introduce
+     * any additional spacing.
+     */
+    #pages {
+      display: block !important;
+
+      margin: 0;
+      padding: 0;
+    }
+
+
+    /*
+     * Printed page.
+     */
+    .print-page {
+      width: 8.5in;
+      height: 11in;
+
+      /*
+       * Exactly 0.25" on all sides.
+       */
+      margin: 0;
+      padding: 0.25in;
+
+      background: white;
+
+      /*
+       * No screen-preview shadow.
+       */
+      box-shadow: none;
+
+      /*
+       * 3 × 3 cards.
+       */
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 2.5in);
+
+      grid-template-rows:
+        repeat(3, 3.5in);
+
+      /*
+       * No gaps between cards.
+       */
+      gap: 0;
+
+      /*
+       * Center the card grid horizontally.
+       */
+      justify-content: center;
+
+      /*
+       * Cards begin immediately after
+       * the 0.25" top padding.
+       */
+      align-content: start;
+
+      /*
+       * Each page begins on a new printed page.
+       */
+      break-after: page;
+      page-break-after: always;
+    }
+
+
+    /*
+     * Don't add an unnecessary blank page after
+     * the final set of cards.
+     */
+    .print-page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+
+    /*
+     * Printed card dimensions.
+     */
+    .card {
+      width: 2.5in;
+      height: 3.5in;
+
+      margin: 0;
+      padding: 0;
+      border: 0;
+
+      display: block;
+
+      object-fit: fill;
+
+      break-inside: avoid;
+
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+</style>
+
+</head>
+
+<body>
+
+    <!-- =======================================================================
+       Error
+       ======================================================================== -->
+
+    <div id="error" class="error" style="display: none;"></div>
+
+    <!-- =======================================================================
+       Configuration UI
+       ======================================================================== -->
+
+    <div id="configuration" style="display: none;">
+
+        <h1>Print Champion Cards</h1>
+
+        <div class="selection-links">
+
+            <a href="#" data-selection="official">
+                Select All Official
+            </a>
+
+            <a href="#" data-selection="community">
+                Select All Community
+            </a>
+
+            <a href="#" data-selection="experimental">
+                Select All Experimental
+            </a>
+
+            <a href="#" data-selection="community-experimental">
+                Select All Community/Experimental
+            </a>
+
+            <a href="#" data-selection="none">
+                Select None
+            </a>
+
+        </div>
+
+
+        <div class="champion-selection">
+
+            <h2>Champions</h2>
+
+            <div id="champion-checkboxes"></div>
+
+        </div>
+
+
+        <button id="generate-button" type="button">
+            Generate
+        </button>
+
+    </div>
+
+    <!-- =======================================================================
+       Print controls
+       ======================================================================== -->
+
+    <div id="print-controls" class="print-controls" style="display: none;">
+        <button onclick="window.print()">
+            Print Cards
+        </button>
+    </div>
+
+    <!-- =======================================================================
+       Printable pages
+       ======================================================================== -->
+
+    <div id="pages"></div>
+
+    <script>
+
+        // =========================================================================
+        // Community / Experimental champion definitions
+        // =========================================================================
+
+        const communityChampionData = {
+            "Community": {
+                "Raith'Marid": true,
+                "Rattlebone": true,
+                "Morrigan": true
+            },
+
+            "Experimental": {
+                "Rangosh": true,
+                "Skullbreaker": true,
+                "Halftusk": true,
+                "Jaak": true,
+                "Grimgut": true,
+                "Kailinn": true,
+                "Lily": true,
+                "Nia": true,
+                "Lorsann": true,
+                "Maxen": true,
+                "Durthax": true,
+                "Helena": true
+            }
+        };
+
+
+        // =========================================================================
+        // Champion definitions
+        // =========================================================================
+
+        const championData = {
+
+            'Slayers': [
+                {
+                    "name": "Keera",
+                    "type": "slayer",
+                    "dodge": 3,
+                    "protection": 2,
+                    "health": 6,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Lorsann",
+                    "type": "slayer",
+                    "dodge": 4,
+                    "protection": 1,
+                    "health": 6,
+                    "movement": "2/3"
+                },
+                {
+                    "name": "Maxen",
+                    "type": "slayer",
+                    "dodge": 3,
+                    "protection": 3,
+                    "health": 6,
+                    "movement": "1/2"
+                },
+                {
+                    "name": "Morrigan",
+                    "type": "slayer",
+                    "dodge": 2,
+                    "protection": 3,
+                    "health": 6,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Rangosh",
+                    "type": "slayer",
+                    "dodge": 4,
+                    "protection": 2,
+                    "health": 7,
+                    "movement": "3/2"
+                },
+                {
+                    "name": "Skullbreaker",
+                    "type": "slayer",
+                    "dodge": 4,
+                    "protection": 1,
+                    "health": 8,
+                    "movement": "3/2"
+                },
+                {
+                    "name": "Sneaky Peet",
+                    "type": "slayer",
+                    "dodge": 5,
+                    "protection": 1,
+                    "health": 5,
+                    "movement": "3/1"
+                }
+            ],
+
+            'Maelstroms': [
+                {
+                    "name": "Blackjaw",
+                    "type": "maelstrom",
+                    "dodge": 3,
+                    "protection": 2,
+                    "health": 8,
+                    "movement": "3/2"
+                },
+                {
+                    "name": "Fenra",
+                    "type": "maelstrom",
+                    "dodge": 5,
+                    "protection": 1,
+                    "health": 5,
+                    "movement": "1/4"
+                },
+                {
+                    "name": "Grimgut",
+                    "type": "maelstrom",
+                    "dodge": 2,
+                    "protection": 2,
+                    "health": 9,
+                    "movement": "1/1"
+                },
+                {
+                    "name": "Jeen",
+                    "type": "maelstrom",
+                    "dodge": 3,
+                    "protection": 3,
+                    "health": 5,
+                    "movement": "3/1"
+                },
+                {
+                    "name": "Kailinn",
+                    "type": "maelstrom",
+                    "dodge": 3,
+                    "protection": 2,
+                    "health": 7,
+                    "movement": "4/4"
+                },
+                {
+                    "name": "Luella",
+                    "type": "maelstrom",
+                    "dodge": 2,
+                    "protection": 3,
+                    "health": 7,
+                    "movement": "1/2"
+                },
+                {
+                    "name": "Titus",
+                    "type": "maelstrom",
+                    "dodge": 3,
+                    "protection": 3,
+                    "health": 5,
+                    "movement": "2/2"
+                }
+            ],
+
+            'Shapers': [
+                {
+                    "name": "Lily",
+                    "type": "shaper",
+                    "dodge": 4,
+                    "protection": 1,
+                    "health": 7,
+                    "movement": "3/3"
+                },
+                {
+                    "name": "Nia",
+                    "type": "shaper",
+                    "dodge": 4,
+                    "protection": 2,
+                    "health": 6,
+                    "movement": "1/2"
+                },
+                {
+                    "name": "Raith'Marid",
+                    "type": "shaper",
+                    "dodge": 2,
+                    "protection": 3,
+                    "health": 7,
+                    "movement": "1/1"
+                },
+                {
+                    "name": "Rattlebone",
+                    "type": "shaper",
+                    "dodge": 3,
+                    "protection": 3,
+                    "health": 6,
+                    "movement": "3/2"
+                },
+                {
+                    "name": "Shayle",
+                    "type": "shaper",
+                    "dodge": 4,
+                    "protection": 2,
+                    "health": 5,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Styx",
+                    "type": "shaper",
+                    "dodge": 4,
+                    "protection": 2,
+                    "health": 6,
+                    "movement": "2/2"
+                }
+            ],
+
+            'Guardians': [
+                {
+                    "name": "Durthax",
+                    "type": "guardian",
+                    "dodge": 2,
+                    "protection": 1,
+                    "health": 14,
+                    "movement": "0/1"
+                },
+                {
+                    "name": "Finvarr",
+                    "type": "guardian",
+                    "dodge": 4,
+                    "protection": 3,
+                    "health": 5,
+                    "movement": "2/3"
+                },
+                {
+                    "name": "Halftusk",
+                    "type": "guardian",
+                    "dodge": 3,
+                    "protection": 3,
+                    "health": 7,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Helena",
+                    "type": "guardian",
+                    "dodge": 3,
+                    "protection": 4,
+                    "health": 4,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Jaak",
+                    "type": "guardian",
+                    "dodge": 4,
+                    "protection": 2,
+                    "health": 7,
+                    "movement": "3/1"
+                },
+                {
+                    "name": "Mournblade",
+                    "type": "guardian",
+                    "dodge": 2,
+                    "protection": 4,
+                    "health": 1,
+                    "movement": "2/2"
+                },
+                {
+                    "name": "Rhodri",
+                    "type": "guardian",
+                    "dodge": 2,
+                    "protection": 4,
+                    "health": 7,
+                    "movement": "1/2"
+                }
+            ]
+        };
+
+
+        // =========================================================================
+        // Champion key
+        // =========================================================================
+
+        function championKey(name) {
+
+            return name
+                .toString()
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+
+        }
+
+
+        // =========================================================================
+        // Flatten champion data
+        // =========================================================================
+
+        const allChampions =
+            Object.values(championData).flat();
+
+
+        // =========================================================================
+        // Get all source versions for a champion
+        //
+        // Every champion has at least Official.
+        //
+        // A champion in Community gets:
+        //   Official
+        //   Community
+        //
+        // A champion in Experimental gets:
+        //   Official
+        //   Experimental
+        //
+        // A champion in both gets:
+        //   Official
+        //   Community
+        //   Experimental
+        // =========================================================================
+
+        function getChampionSources(champion) {
+
+            const sources = [
+                "official"
+            ];
+
+
+            if (
+                communityChampionData.Community[champion.name]
+            ) {
+                sources.push("community");
+            }
+
+
+            if (
+                communityChampionData.Experimental[champion.name]
+            ) {
+                sources.push("experimental");
+            }
+
+
+            return sources;
+        }
+
+
+        // =========================================================================
+        // Get card URL
+        // =========================================================================
+
+        function getCardUrls(champion, source) {
+
+            const championType = champion.type;
+            const key = championKey(champion.name);
+
+            let basePath;
+
+            switch (source) {
+
+                case "official":
+                    basePath =
+                        "../../assets/champion-cards/webp/";
+                    break;
+
+                case "community":
+                    basePath =
+                        "../../assets/champion-cards/community-balance/v1/webp/";
+                    break;
+
+                case "experimental":
+                    basePath =
+                        "../../assets/champion-cards/community-balance/webp/";
+                    break;
+
+                default:
+                    return [];
+            }
+
+
+            const prefix =
+                `${championType}-${key}-`;
+
+
+            return [
+                `${basePath}${prefix}trait.webp`,
+                `${basePath}${prefix}champion-plot.webp`,
+                `${basePath}${prefix}champion-clash.webp`,
+                `${basePath}${prefix}traitback.webp`,
+                `${basePath}${prefix}followers-plot.webp`,
+                `${basePath}${prefix}followers-clash.webp`
+            ];
+        }
+
+
+        // =========================================================================
+        // Get icon URL
+        // =========================================================================
+
+        function getIconUrl(champion) {
+
+            const championType =
+                champion.type;
+
+            const key =
+                championKey(champion.name);
+
+            return (
+                `../../assets/champion-icons/` +
+                `${championType}-${key}.png`
+            );
+        }
+
+
+        // =========================================================================
+        // Create a unique checkbox ID
+        // =========================================================================
+
+        function checkboxId(champion, source) {
+
+            return (
+                `${championKey(champion.name)}-${source}`
+            );
+        }
+
+
+        // =========================================================================
+        // Display error
+        // =========================================================================
+
+        function showError(message) {
+
+            document.getElementById(
+                "configuration"
+            ).style.display = "none";
+
+            document.getElementById(
+                "print-controls"
+            ).style.display = "none";
+
+            document.getElementById(
+                "pages"
+            ).style.display = "none";
+
+
+            const error =
+                document.getElementById("error");
+
+            error.textContent =
+                message;
+
+            error.style.display =
+                "block";
+        }
+
+
+        // =========================================================================
+        // Build champion selection UI
+        // =========================================================================
+
+        function buildChampionSelection() {
+
+            const container =
+                document.getElementById(
+                    "champion-checkboxes"
+                );
+
+            container.innerHTML = "";
+
+
+            for (
+                const [groupName, champions]
+                of Object.entries(championData)
+            ) {
+
+                const group =
+                    document.createElement("div");
+
+                group.className =
+                    "champion-group";
+
+
+                const heading =
+                    document.createElement("h3");
+
+                heading.textContent =
+                    groupName;
+
+                group.appendChild(
+                    heading
+                );
+
+
+                for (
+                    const champion of champions
+                ) {
+
+                    const sources =
+                        getChampionSources(
+                            champion
+                        );
+
+
+                    /*
+                     * Create one checkbox for EVERY source
+                     * that exists for this champion.
+                     */
+                    for (
+                        const source of sources
+                    ) {
+
+                        const label =
+                            document.createElement("label");
+
+                        label.className =
+                            "champion-checkbox";
+
+
+                        const checkbox =
+                            document.createElement("input");
+
+                        checkbox.type =
+                            "checkbox";
+
+                        checkbox.name =
+                            "champion";
+
+                        checkbox.id =
+                            checkboxId(
+                                champion,
+                                source
+                            );
+
+                        /*
+                         * The value contains both the champion
+                         * key and the source so that the two versions
+                         * can coexist in the generated URL.
+                         */
+                        checkbox.value =
+                            `${championKey(champion.name)}:${source}`;
+
+
+                        // ---------------------------------------------------------------
+                        // Icon
+                        // ---------------------------------------------------------------
+
+                        const iconLink =
+                            document.createElement("a");
+
+                        iconLink.className =
+                            "champion-icon-link";
+
+                        iconLink.href =
+                            getIconUrl(champion);
+
+                        iconLink.target =
+                            "_blank";
+
+                        iconLink.rel =
+                            "noopener";
+
+
+                        const icon =
+                            document.createElement("img");
+
+                        icon.className =
+                            "champion-icon";
+
+                        icon.src =
+                            getIconUrl(champion);
+
+                        icon.alt =
+                            "";
+
+
+                        iconLink.appendChild(
+                            icon
+                        );
+
+
+                        // ---------------------------------------------------------------
+                        // Label
+                        // ---------------------------------------------------------------
+
+                        const name =
+                            document.createTextNode(
+                                `${champion.name} ` +
+                                `(${capitalize(source)})`
+                            );
+
+
+                        label.appendChild(
+                            checkbox
+                        );
+
+                        label.appendChild(
+                            iconLink
+                        );
+
+                        label.appendChild(
+                            name
+                        );
+
+
+                        group.appendChild(
+                            label
+                        );
+                    }
+                }
+
+
+                container.appendChild(
+                    group
+                );
+            }
+        }
+
+
+        // =========================================================================
+        // Capitalize source name
+        // =========================================================================
+
+        function capitalize(value) {
+
+            return (
+                value.charAt(0).toUpperCase() +
+                value.slice(1)
+            );
+        }
+
+
+        // =========================================================================
+        // Select all cards for a particular source
+        // =========================================================================
+
+        function selectBySource(source) {
+
+            document
+                .querySelectorAll(
+                    'input[name="champion"]'
+                )
+                .forEach(checkbox => {
+
+                    checkbox.checked =
+                        checkbox.value.endsWith(
+                            `:${source}`
+                        );
+                });
+        }
+
+
+        // =========================================================================
+        // Select Community + Experimental
+        // =========================================================================
+
+        function selectCommunityAndExperimental() {
+
+            document
+                .querySelectorAll(
+                    'input[name="champion"]'
+                )
+                .forEach(checkbox => {
+
+                    checkbox.checked =
+                        checkbox.value.endsWith(
+                            ":community"
+                        ) ||
+                        checkbox.value.endsWith(
+                            ":experimental"
+                        );
+                });
+        }
+
+
+        // =========================================================================
+        // Select none
+        // =========================================================================
+
+        function selectNone() {
+
+            document
+                .querySelectorAll(
+                    'input[name="champion"]'
+                )
+                .forEach(
+                    checkbox =>
+                        checkbox.checked = false
+                );
+        }
+
+
+        // =========================================================================
+        // Generate printable URL
+        // =========================================================================
+
+        function generateCards() {
+
+            const selectedCheckboxes =
+                document.querySelectorAll(
+                    'input[name="champion"]:checked'
+                );
+
+
+            if (
+                selectedCheckboxes.length === 0
+            ) {
+
+                alert(
+                    "Please select at least one champion."
+                );
+
+                return;
+            }
+
+
+            const selections =
+                Array.from(
+                    selectedCheckboxes
+                ).map(
+                    checkbox =>
+                        checkbox.value
+                );
+
+
+            /*
+             * The type parameter is retained for compatibility.
+             *
+             * If all selections are one source, use that source.
+             * Otherwise experimental is used as the umbrella type.
+             */
+            const sources =
+                [
+                    ...new Set(
+                        selections.map(
+                            value =>
+                                value.split(":")[1]
+                        )
+                    )
+                ];
+
+
+            const type =
+                sources.length === 1
+                    ? sources[0]
+                    : "experimental";
+
+
+            const url =
+                new URL(
+                    window.location.href
+                );
+
+
+            url.search = "";
+
+
+            url.searchParams.set(
+                "type",
+                type
+            );
+
+
+            url.searchParams.set(
+                "champions",
+                selections.join(",")
+            );
+
+
+            window.location.href =
+                url.toString();
+        }
+
+
+        // =========================================================================
+        // Parse a champion/source selection
+        // =========================================================================
+
+        function parseSelection(value) {
+
+            const parts =
+                value.split(":");
+
+
+            return {
+                key: parts[0],
+                source: parts[1] || null
+            };
+        }
+
+
+        // =========================================================================
+        // Find champion by key
+        // =========================================================================
+
+        function findChampionByKey(key) {
+
+            return allChampions.find(
+                champion =>
+                    championKey(
+                        champion.name
+                    ) === key
+            );
+        }
+
+
+        // =========================================================================
+        // Render printable cards
+        // =========================================================================
+
+        function renderCards(selections) {
+
+            const pagesContainer =
+                document.getElementById("pages");
+
+            pagesContainer.innerHTML = "";
+
+            pagesContainer.style.display = "block";
+
+
+            // Each selected champion/source produces six cards.
+            const cards = [];
+
+
+            for (const selection of selections) {
+
+                const urls =
+                    getCardUrls(
+                        selection.champion,
+                        selection.source
+                    );
+
+
+                for (const url of urls) {
+
+                    cards.push({
+                        url: url,
+                        champion: selection.champion,
+                        source: selection.source
+                    });
+                }
+            }
+
+
+            // Nine 2.5" x 3.5" cards fit on each Letter page.
+            const CARDS_PER_PAGE = 9;
+
+
+            for (
+                let i = 0;
+                i < cards.length;
+                i += CARDS_PER_PAGE
+            ) {
+
+                const page =
+                    document.createElement("div");
+
+                page.className =
+                    "print-page";
+
+
+                const pageCards =
+                    cards.slice(
+                        i,
+                        i + CARDS_PER_PAGE
+                    );
+
+
+                for (const card of pageCards) {
+
+                    const img =
+                        document.createElement("img");
+
+                    img.className =
+                        "card";
+
+                    img.src =
+                        card.url;
+
+                    img.alt =
+                        `${card.champion.name} ` +
+                        `(${capitalize(card.source)})`;
+
+
+                    img.onerror =
+                        function () {
+
+                            showError(
+                                `Unable to load card image: ${card.url}`
+                            );
+                        };
+
+
+                    page.appendChild(img);
+                }
+
+
+                pagesContainer.appendChild(page);
+            }
+        }
+
+
+        // =========================================================================
+        // Build printable page from URL parameters
+        // =========================================================================
+
+        function buildPrintablePage() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const type =
+                (
+                    params.get("type") || ""
+                )
+                    .trim()
+                    .toLowerCase();
+
+
+            const validTypes = [
+                "official",
+                "community",
+                "experimental"
+            ];
+
+
+            // -----------------------------------------------------------------------
+            // No parameters = configuration
+            // -----------------------------------------------------------------------
+
+            if (!type) {
+
+                document.getElementById(
+                    "configuration"
+                ).style.display =
+                    "block";
+
+
+                buildChampionSelection();
+
+
+                return;
+            }
+
+
+            // -----------------------------------------------------------------------
+            // Validate type
+            // -----------------------------------------------------------------------
+
+            if (
+                !validTypes.includes(type)
+            ) {
+
+                showError(
+                    'Invalid type. The "type" parameter must be ' +
+                    '"official", "community", or "experimental".'
+                );
+
+                return;
+            }
+
+
+            // -----------------------------------------------------------------------
+            // Read champions
+            // -----------------------------------------------------------------------
+
+            const championsParam =
+                params.get("champions");
+
+
+            let selections = [];
+
+
+            /*
+             * If no champions are specified, select ALL
+             * versions associated with the requested type.
+             *
+             * Official:
+             *   every official card
+             *
+             * Community:
+             *   every community card
+             *
+             * Experimental:
+             *   every experimental card
+             */
+            if (!championsParam) {
+
+                for (
+                    const champion of allChampions
+                ) {
+
+                    const sources =
+                        getChampionSources(
+                            champion
+                        );
+
+
+                    if (
+                        sources.includes(type)
+                    ) {
+
+                        selections.push({
+                            champion: champion,
+                            source: type
+                        });
+                    }
+                }
+            }
+
+
+            /*
+             * Explicit champion selections.
+             */
+            else {
+
+                const requestedSelections =
+                    championsParam
+                        .split(",")
+                        .map(value =>
+                            value.trim().toLowerCase()
+                        )
+                        .filter(
+                            value =>
+                                value.length > 0
+                        );
+
+
+                const invalidSelections = [];
+
+
+                for (
+                    const requestedSelection
+                    of requestedSelections
+                ) {
+
+                    const parsed =
+                        parseSelection(
+                            requestedSelection
+                        );
+
+
+                    const champion =
+                        findChampionByKey(
+                            parsed.key
+                        );
+
+
+                    // ---------------------------------------------------------------
+                    // Champion key doesn't exist
+                    // ---------------------------------------------------------------
+
+                    if (!champion) {
+
+                        invalidSelections.push(
+                            requestedSelection
+                        );
+
+                        continue;
+                    }
+
+
+                    // ---------------------------------------------------------------
+                    // Source wasn't specified
+                    //
+                    // For backwards compatibility, use the URL's type.
+                    // ---------------------------------------------------------------
+
+                    const source =
+                        parsed.source || type;
+
+
+                    // ---------------------------------------------------------------
+                    // Validate source
+                    // ---------------------------------------------------------------
+
+                    if (
+                        !validTypes.includes(source)
+                    ) {
+
+                        invalidSelections.push(
+                            requestedSelection
+                        );
+
+                        continue;
+                    }
+
+
+                    // ---------------------------------------------------------------
+                    // Validate that this champion actually has this source.
+                    // ---------------------------------------------------------------
+
+                    const sources =
+                        getChampionSources(
+                            champion
+                        );
+
+
+                    if (
+                        !sources.includes(source)
+                    ) {
+
+                        invalidSelections.push(
+                            requestedSelection
+                        );
+
+                        continue;
+                    }
+
+
+                    selections.push({
+                        champion: champion,
+                        source: source
+                    });
+                }
+
+
+                /*
+                 * If ANY requested selection is invalid,
+                 * show only an error.
+                 */
+                if (
+                    invalidSelections.length > 0
+                ) {
+
+                    showError(
+                        `Invalid champion selection(s): ` +
+                        `${invalidSelections.join(", ")}`
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    selections.length === 0
+                ) {
+
+                    showError(
+                        'The "champions" parameter did not contain ' +
+                        'any valid champion selections.'
+                    );
+
+                    return;
+                }
+            }
+
+
+            // -----------------------------------------------------------------------
+            // Show print controls
+            // -----------------------------------------------------------------------
+
+            document.getElementById(
+                "print-controls"
+            ).style.display =
+                "block";
+
+
+            // -----------------------------------------------------------------------
+            // Render
+            // -----------------------------------------------------------------------
+
+            renderCards(
+                selections
+            );
+        }
+
+
+        // =========================================================================
+        // Selection link handlers
+        // =========================================================================
+
+        document
+            .querySelectorAll(
+                ".selection-links a"
+            )
+            .forEach(link => {
+
+                link.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        const selection =
+                            this.dataset.selection;
+
+
+                        switch (selection) {
+
+                            case "official":
+                                selectBySource(
+                                    "official"
+                                );
+                                break;
+
+
+                            case "community":
+                                selectBySource(
+                                    "community"
+                                );
+                                break;
+
+
+                            case "experimental":
+                                selectBySource(
+                                    "experimental"
+                                );
+                                break;
+
+
+                            case "community-experimental":
+                                selectCommunityAndExperimental();
+                                break;
+
+
+                            case "none":
+                                selectNone();
+                                break;
+                        }
+                    }
+                );
+            });
+
+
+        // =========================================================================
+        // Generate button
+        // =========================================================================
+
+        document
+            .getElementById(
+                "generate-button"
+            )
+            .addEventListener(
+                "click",
+                generateCards
+            );
+
+
+        // =========================================================================
+        // Start
+        // =========================================================================
+
+        buildPrintablePage();
+
+    </script>
+
+</body>
+
+</html>
