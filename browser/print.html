@@ -13,7 +13,7 @@
      ========================================================================== */
 
   @page {
-    size: Letter;
+    size: Letter landscape;
     margin: 0;
   }
 
@@ -109,6 +109,44 @@
     object-fit: contain;
   }
 
+  /* ==========================================================================
+     SCENARIO SELECTION
+     ========================================================================== */
+
+    .scenario-group {
+        margin-bottom: 24px;
+    }
+
+    .scenario-group h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+    }
+
+    .scenario-checkbox {
+        display: flex;
+        align-items: center;
+        margin: 6px 0;
+        font-size: 15px;
+        min-height: 32px;
+    }
+
+    .scenario-checkbox input {
+        margin: 0 8px 0 0;
+        flex-shrink: 0;
+    }
+
+    .scenario-selection-links {
+        margin-bottom: 25px;
+    }
+
+    .scenario-selection-links a {
+        display: block;
+        margin: 8px 0;
+        color: #0645ad;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
 
   /* ==========================================================================
      Generate button
@@ -175,8 +213,8 @@
      ========================================================================== */
 
   .print-page {
-    width: 8.5in;
-    height: 11in;
+    width: 11in;
+    height: 8.5in;
 
     /*
      * Exactly 0.25" of padding on every side.
@@ -200,7 +238,7 @@
       repeat(3, 2.5in);
 
     grid-template-rows:
-      repeat(3, 3.5in);
+      repeat(2, 3.5in);
 
     /*
      * Absolutely no spacing between cards.
@@ -217,7 +255,7 @@
      * content area, immediately after the
      * 0.25" top padding.
      */
-    align-content: start;
+    align-content: center;
 
     /*
      * White page background.
@@ -271,6 +309,10 @@
     -webkit-print-color-adjust: exact;
   }
 
+  .card.upside-down {
+    transform: rotate(180deg);
+  }
+
 
   /* ==========================================================================
      Screen preview
@@ -318,7 +360,7 @@
      */
     html,
     body {
-      width: 8.5in;
+      width: 11in;
       height: auto;
 
       margin: 0;
@@ -344,8 +386,8 @@
      * Printed page.
      */
     .print-page {
-      width: 8.5in;
-      height: 11in;
+      width: 11in;
+      height: 8.5in;
 
       /*
        * Exactly 0.25" on all sides.
@@ -369,7 +411,7 @@
         repeat(3, 2.5in);
 
       grid-template-rows:
-        repeat(3, 3.5in);
+        repeat(2, 3.5in);
 
       /*
        * No gaps between cards.
@@ -385,7 +427,7 @@
        * Cards begin immediately after
        * the 0.25" top padding.
        */
-      align-content: start;
+      align-content: center;
 
       /*
        * Each page begins on a new printed page.
@@ -444,41 +486,63 @@
 
     <div id="configuration" style="display: none;">
 
-        <h1>Print Champion Cards</h1>
-
-        <div class="selection-links">
-
-            <a href="#" data-selection="official">
-                Select All Official
-            </a>
-
-            <a href="#" data-selection="community">
-                Select All Community
-            </a>
-
-            <a href="#" data-selection="experimental">
-                Select All Experimental
-            </a>
-
-            <a href="#" data-selection="community-experimental">
-                Select All Community/Experimental
-            </a>
-
-            <a href="#" data-selection="none">
-                Select None
-            </a>
-
-        </div>
-
+        <h1>Print Cards</h1>
 
         <div class="champion-selection">
-
             <h2>Champions</h2>
+            <div class="selection-links">
+
+                <a href="#" data-selection="official">
+                    Select All Official
+                </a>
+
+                <a href="#" data-selection="community">
+                    Select All Community
+                </a>
+
+                <a href="#" data-selection="experimental">
+                    Select All Experimental
+                </a>
+
+                <a href="#" data-selection="community-experimental">
+                    Select All Community/Experimental
+                </a>
+
+                <a href="#" data-selection="none">
+                    Select None
+                </a>
+
+            </div>
 
             <div id="champion-checkboxes"></div>
-
         </div>
 
+        <div class="scenario-selection">
+            <h2>Scenarios</h2>
+
+            <div class="scenario-selection-links">
+
+                <a href="#" data-scenario-selection="official-competitive">
+                    Select All Official (Competitive)
+                </a>
+
+                <a href="#" data-scenario-selection="official-out-of-rotation">
+                    Select All Official (Out of Rotation)
+                </a>
+
+                <a href="#" data-scenario-selection="community">
+                    Select All Community
+                </a>
+
+
+                <a href="#" data-scenario-selection="none">
+                    Select None
+                </a>
+
+            </div>
+
+            <div id="scenario-checkboxes"></div>
+        </div>
 
         <button id="generate-button" type="button">
             Generate
@@ -503,6 +567,8 @@
     <div id="pages"></div>
 
     <script>
+
+        const CARDS_PER_PAGE = 6;
 
         // =========================================================================
         // Community / Experimental champion definitions
@@ -767,6 +833,87 @@
             ]
         };
 
+        const scenarioData = {
+    "Official (Competitive)": [
+        {
+            key: "change",
+            name: "Change",
+            path: "../assets/official-scenarios/change.jpg"
+        },
+        {
+            key: "chaos",
+            name: "Chaos",
+            path: "../assets/official-scenarios/chaos.jpg"
+        },
+        {
+            key: "construction",
+            name: "Construction",
+            path: "../assets/official-scenarios/construction.jpg"
+        },
+        {
+            key: "death",
+            name: "Death",
+            path: "../assets/official-scenarios/death.jpg"
+        },
+        {
+            key: "knowledge",
+            name: "Knowledge",
+            path: "../assets/official-scenarios/knowledge.jpg"
+        },
+        {
+            key: "life",
+            name: "Life",
+            path: "../assets/official-scenarios/life.jpg"
+        }
+    ],
+
+    "Official (Out of Rotation)": [
+        {
+            key: "quest",
+            name: "Quest",
+            path: "../assets/official-scenarios/quest.jpg"
+        }
+    ],
+
+    "Community": [
+        {
+            key: "2v2change",
+            name: "2v2 Change",
+            path: "../assets/homebrew-scenarios/2v2Change.jpg"
+        },
+        {
+            key: "2v2chaos",
+            name: "2v2 Chaos",
+            path: "../assets/homebrew-scenarios/2v2Chaos.jpg"
+        },
+        {
+            key: "2v2construction",
+            name: "2v2 Construction",
+            path: "../assets/homebrew-scenarios/2v2Construction.jpg"
+        },
+        {
+            key: "2v2death",
+            name: "2v2 Death",
+            path: "../assets/homebrew-scenarios/2v2Death.jpg"
+        },
+        {
+            key: "2v2knowledge",
+            name: "2v2 Knowledge",
+            path: "../assets/homebrew-scenarios/2v2Knowledge.jpg"
+        },
+        {
+            key: "plenty",
+            name: "Plenty",
+            path: "../assets/homebrew-scenarios/Plenty.jpg"
+        },
+        {
+            key: "trade",
+            name: "Trade",
+            path: "../assets/homebrew-scenarios/Trade.jpg"
+        }
+    ]
+};
+
 
         // =========================================================================
         // Champion key
@@ -872,12 +1019,21 @@
                 `${championType}-${key}-`;
 
 
+            // return [
+            //     `${basePath}${prefix}trait.webp`,
+            //     `${basePath}${prefix}champion-plot.webp`,
+            //     `${basePath}${prefix}champion-clash.webp`,
+            //     `${basePath}${prefix}traitback.webp`,
+            //     `${basePath}${prefix}followers-plot.webp`,
+            //     `${basePath}${prefix}followers-clash.webp`
+            // ];
+
             return [
-                `${basePath}${prefix}trait.webp`,
                 `${basePath}${prefix}champion-plot.webp`,
+                `${basePath}${prefix}trait.webp`,
+                `${basePath}${prefix}followers-plot.webp`,
                 `${basePath}${prefix}champion-clash.webp`,
                 `${basePath}${prefix}traitback.webp`,
-                `${basePath}${prefix}followers-plot.webp`,
                 `${basePath}${prefix}followers-clash.webp`
             ];
         }
@@ -1105,6 +1261,43 @@
             }
         }
 
+        // =========================================================================
+        // Build scenario selection UI
+        // =========================================================================
+
+
+        function buildScenarioSelection() {
+            const container = document.getElementById("scenario-checkboxes");
+            container.innerHTML = "";
+
+            for (const [groupName, scenarios] of Object.entries(scenarioData)) {
+                const group = document.createElement("div");
+                group.className = "scenario-group";
+
+                const heading = document.createElement("h3");
+                heading.textContent = groupName;
+                group.appendChild(heading);
+
+                for (const scenario of scenarios) {
+                    const label = document.createElement("label");
+                    label.className = "scenario-checkbox";
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.name = "scenario";
+                    checkbox.value = scenario.key;
+
+                    label.appendChild(checkbox);
+
+                    const text = document.createTextNode(scenario.name);
+                    label.appendChild(text);
+
+                    group.appendChild(label);
+                }
+
+                container.appendChild(group);
+            }
+        }
 
         // =========================================================================
         // Capitalize source name
@@ -1118,6 +1311,21 @@
             );
         }
 
+        // =========================================================================
+        // MISC
+        // =========================================================================
+
+        function findScenarioByKey(key) {
+            for (const scenarios of Object.values(scenarioData)) {
+                const scenario = scenarios.find(s => s.key === key);
+
+                if (scenario) {
+                    return scenario;
+                }
+            }
+
+            return null;
+        }
 
         // =========================================================================
         // Select all cards for a particular source
@@ -1135,6 +1343,42 @@
                         checkbox.value.endsWith(
                             `:${source}`
                         );
+                });
+        }
+
+        // =========================================================================
+        // Select scenarios by group
+        // =========================================================================
+
+        function selectScenariosByGroup(groupName) {
+
+            const scenarioKeys =
+                scenarioData[groupName].map(
+                    scenario => scenario.key
+                );
+
+            document
+                .querySelectorAll(
+                    'input[name="scenario"]'
+                )
+                .forEach(checkbox => {
+
+                    checkbox.checked =
+                        scenarioKeys.includes(
+                            checkbox.value
+                        );
+                });
+        }
+
+        function selectNoScenarios() {
+
+            document
+                .querySelectorAll(
+                    'input[name="scenario"]'
+                )
+                .forEach(checkbox => {
+
+                    checkbox.checked = false;
                 });
         }
 
@@ -1184,80 +1428,34 @@
         // =========================================================================
 
         function generateCards() {
+            const championSelections = Array.from(
+                document.querySelectorAll('input[name="champion"]:checked')
+            ).map(checkbox => checkbox.value);
 
-            const selectedCheckboxes =
-                document.querySelectorAll(
-                    'input[name="champion"]:checked'
-                );
+            const scenarioSelections = Array.from(
+                document.querySelectorAll('input[name="scenario"]:checked')
+            ).map(checkbox => checkbox.value);
 
+            const params = new URLSearchParams();
 
-            if (
-                selectedCheckboxes.length === 0
-            ) {
+            // Preserve the existing champion type parameter.
+            const type = document.querySelector('input[name="champion"]:checked')
+                ?.value
+                ?.split(":")[1];
 
-                alert(
-                    "Please select at least one champion."
-                );
-
-                return;
+            if (type) {
+                params.set("type", type);
             }
 
+            if (championSelections.length > 0) {
+                params.set("champions", championSelections.join(","));
+            }
 
-            const selections =
-                Array.from(
-                    selectedCheckboxes
-                ).map(
-                    checkbox =>
-                        checkbox.value
-                );
+            if (scenarioSelections.length > 0) {
+                params.set("scenarios", scenarioSelections.join(","));
+            }
 
-
-            /*
-             * The type parameter is retained for compatibility.
-             *
-             * If all selections are one source, use that source.
-             * Otherwise experimental is used as the umbrella type.
-             */
-            const sources =
-                [
-                    ...new Set(
-                        selections.map(
-                            value =>
-                                value.split(":")[1]
-                        )
-                    )
-                ];
-
-
-            const type =
-                sources.length === 1
-                    ? sources[0]
-                    : "experimental";
-
-
-            const url =
-                new URL(
-                    window.location.href
-                );
-
-
-            url.search = "";
-
-
-            url.searchParams.set(
-                "type",
-                type
-            );
-
-
-            url.searchParams.set(
-                "champions",
-                selections.join(",")
-            );
-
-
-            window.location.href =
-                url.toString();
+            window.location.href = `?${params.toString()}`;
         }
 
 
@@ -1297,116 +1495,92 @@
         // Render printable cards
         // =========================================================================
 
-        function renderCards(selections) {
-
-            const pagesContainer =
-                document.getElementById("pages");
-
-            pagesContainer.innerHTML = "";
-
-            pagesContainer.style.display = "block";
-
-
-            // Each selected champion/source produces six cards.
+        function buildCards(selections, scenarioKeys) {
             const cards = [];
 
-
+            // Champion cards
             for (const selection of selections) {
+                const cardUrls = getCardUrls(
+                    selection.champion,
+                    selection.source
+                );
 
-                const urls =
-                    getCardUrls(
-                        selection.champion,
-                        selection.source
-                    );
-
-
-                for (const url of urls) {
-
+                for (const path of cardUrls) {
                     cards.push({
-                        url: url,
-                        champion: selection.champion,
-                        source: selection.source
+                        path,
+                        alt: `${selection.champion.name} card`
                     });
                 }
             }
 
+            // Scenario cards
+            for (const key of scenarioKeys) {
+                const scenario = findScenarioByKey(key);
 
-            // Nine 2.5" x 3.5" cards fit on each Letter page.
-            const CARDS_PER_PAGE = 9;
+                if (!scenario) {
+                    continue;
+                }
 
+                cards.push({
+                    path: scenario.path,
+                    alt: `${scenario.name} scenario`,
+                    isScenario: true
+                });
+            }
 
-            for (
-                let i = 0;
-                i < cards.length;
-                i += CARDS_PER_PAGE
-            ) {
+            return cards;
+        }
 
-                const page =
-                    document.createElement("div");
+        function renderCards(cards) {
+            const pagesContainer = document.getElementById("pages");
+            pagesContainer.innerHTML = "";
+            pagesContainer.style.display = "block";
 
-                page.className =
-                    "print-page";
+            for (let i = 0; i < cards.length; i += CARDS_PER_PAGE) {
+                const pageCards = cards.slice(i, i + CARDS_PER_PAGE);
 
+                const page = document.createElement("div");
+                page.className = "print-page";
 
-                const pageCards =
-                    cards.slice(
-                        i,
-                        i + CARDS_PER_PAGE
-                    );
+                for (let cardIndex = 0; cardIndex < pageCards.length; cardIndex++) {
+                    const card = pageCards[cardIndex];
 
+                    const img = document.createElement("img");
+                    img.className = "card";
 
-                for (const card of pageCards) {
+                    // The first three cards on every page are printed upside-down.
+                    if (!card.isScenario && cardIndex < 3) {
+                        img.classList.add("upside-down");
+                    }
 
-                    const img =
-                        document.createElement("img");
+                    img.src = card.path;
+                    img.alt = card.alt || "";
 
-                    img.className =
-                        "card";
-
-                    img.src =
-                        card.url;
-
-                    img.alt =
-                        `${card.champion.name} ` +
-                        `(${capitalize(card.source)})`;
-
-
-                    img.onerror =
-                        function () {
-
-                            showError(
-                                `Unable to load card image: ${card.url}`
-                            );
-                        };
-
+                    img.onerror = () => {
+                        showError(`Unable to load card image: ${card.path}`);
+                    };
 
                     page.appendChild(img);
                 }
 
-
                 pagesContainer.appendChild(page);
             }
         }
-
 
         // =========================================================================
         // Build printable page from URL parameters
         // =========================================================================
 
         function buildPrintablePage() {
+            const params = new URLSearchParams(window.location.search);
 
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
+            const type = params.get("type");
+            const championParam = params.get("champions");
+            const scenarioParam = params.get("scenarios");
 
-
-            const type =
-                (
-                    params.get("type") || ""
-                )
-                    .trim()
-                    .toLowerCase();
+            const scenarioKeys = scenarioParam
+                ? scenarioParam.split(",").filter(Boolean)
+                : [];
 
 
             const validTypes = [
@@ -1420,7 +1594,7 @@
             // No parameters = configuration
             // -----------------------------------------------------------------------
 
-            if (!type) {
+            if (!type && !championParam && !scenarioParam) {
 
                 document.getElementById(
                     "configuration"
@@ -1429,7 +1603,7 @@
 
 
                 buildChampionSelection();
-
+                buildScenarioSelection();
 
                 return;
             }
@@ -1440,7 +1614,8 @@
             // -----------------------------------------------------------------------
 
             if (
-                !validTypes.includes(type)
+                (type && !validTypes.includes(type))
+                // || (championParam && !type)
             ) {
 
                 showError(
@@ -1652,9 +1827,14 @@
             // Render
             // -----------------------------------------------------------------------
 
-            renderCards(
-                selections
-            );
+            const cards = buildCards(selections, scenarioKeys);
+
+            if (cards.length === 0) {
+                showError("No champions or scenarios were selected.");
+                return;
+            }
+
+            renderCards(cards);
         }
 
 
@@ -1709,6 +1889,53 @@
 
                             case "none":
                                 selectNone();
+                                break;
+                        }
+                    }
+                );
+            });
+
+        // =========================================================================
+        // Scenario selection link handlers
+        // =========================================================================
+
+        document
+            .querySelectorAll(
+                ".scenario-selection-links a"
+            )
+            .forEach(link => {
+
+                link.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        const selection =
+                            this.dataset.scenarioSelection;
+
+                        switch (selection) {
+
+                            case "official-competitive":
+                                selectScenariosByGroup(
+                                    "Official (Competitive)"
+                                );
+                                break;
+
+                            case "official-out-of-rotation":
+                                selectScenariosByGroup(
+                                    "Official (Out of Rotation)"
+                                );
+                                break;
+
+                            case "community":
+                                selectScenariosByGroup(
+                                    "Community"
+                                );
+                                break;
+
+                            case "none":
+                                selectNoScenarios();
                                 break;
                         }
                     }
